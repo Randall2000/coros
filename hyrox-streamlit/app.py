@@ -334,6 +334,14 @@ def parse_activities(a):
                         "dur":dur,"hr":hr,"cal":cal,"tag":tag})
     return records[:5]
 
+# ── LOAD ───────────────────────────────────────────────────────────────────────
+h_raw  = load_json(DATA / "health.json")
+a_raw  = load_json(DATA / "activities.json")
+s_raw  = load_json(DATA / "strava.json")
+health = parse_health(h_raw)
+acts   = parse_activities(a_raw)
+zoe    = parse_intervals(s_raw)
+
 # ── TREND DATA ─────────────────────────────────────────────────────────────────
 random.seed(7)
 today     = datetime.today()
@@ -389,14 +397,6 @@ def chart_base(reverse_y=False):
     )
     if reverse_y: base["yaxis"]["autorange"] = "reversed"
     return base
-
-# ── LOAD ───────────────────────────────────────────────────────────────────────
-h_raw  = load_json(DATA / "health.json")
-a_raw  = load_json(DATA / "activities.json")
-s_raw  = load_json(DATA / "strava.json")
-health = parse_health(h_raw)
-acts   = parse_activities(a_raw)
-zoe    = parse_intervals(s_raw)
 
 race_date  = datetime(2027, 3, 13)
 days_left  = (race_date - today).days
