@@ -1,23 +1,33 @@
 {
   "source": "manual",
-  "updatedAt": "2026-07-27T06:22:35",
+  "updatedAt": "2026-07-27T17:22:00",
   "activities_7d": [
     {
-      "date": "2026-07-27",
-      "name": "驗證測試跑步",
+      "date": "2026-07-26",
+      "name": "跑步",
       "sport": "Run",
-      "training_load": 72,
-      "distance_km": 9.5,
-      "avg_pace": "5:28",
-      "avg_pace_float": 5.4667,
-      "avg_hr": 148
+      "training_load": 30,
+      "distance_km": 4.03,
+      "avg_pace": "6:20",
+      "avg_pace_float": 6.3333,
+      "avg_hr": null
+    },
+    {
+      "date": "2026-07-25",
+      "name": "跑步",
+      "sport": "Run",
+      "training_load": 22,
+      "distance_km": 3.15,
+      "avg_pace": "6:57",
+      "avg_pace_float": 6.95,
+      "avg_hr": null
     }
   ],
   "summary_7d": {
-    "total_load": 72,
-    "total_distance_km": 9.5,
-    "avg_pace": "5:28",
-    "avg_pace_float": 5.4667,
-    "activity_count": 1
+    "total_load": 52,
+    "total_distance_km": 7.18,
+    "avg_pace": "6:38",
+    "avg_pace_float": 6.6417,
+    "activity_count": 2
   }
 }
