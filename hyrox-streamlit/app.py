@@ -241,11 +241,17 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   .eq { padding: 16px 16px; gap: 14px; }
   .mt { padding: 14px 14px 12px; }
 
-  /* Score card - player names */
-  .ws-name     { font-size: 20px; letter-spacing: 0.5px; }
-  .ws-score    { font-size: 40px !important; letter-spacing: -1px; }
-  .ws-unit     { font-size: 20px; }
-  .ws-pct      { font-size: 20px; }
+  /* WAR ROOM - vertical stack on mobile */
+  .wr-scores { flex-direction: column; align-items: stretch; gap: 0; margin-bottom: 16px; }
+  .ws-player { display: block; padding: 14px 0; border-bottom: 1px solid var(--out-v); }
+  .ws-player:last-child { border-bottom: none; padding-bottom: 4px; }
+  .ws-player-z { text-align: left; }
+  .ws-name    { white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                font-size: 20px; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .ws-score   { font-size: 40px !important; letter-spacing: -1px; line-height: 1; }
+  .ws-unit    { font-size: 20px; }
+  .ws-pct     { font-size: 20px; margin-top: 4px; }
+  .ws-mid     { padding: 14px 0; border-bottom: 1px solid var(--out-v); text-align: center; }
   .ws-lead-pts { font-size: 28px !important; }
   .ws-lead-lbl { font-size: 20px; }
 
@@ -663,7 +669,7 @@ st.markdown(f"""
     </div>
     <div class="bb-labels">
       <span style="color:#58A6FF">⚡ {r_pct}%</span>
-      <span style="font-size:10px;color:rgba(139,148,158,0.5)">｜ 50% 均衡點 ｜</span>
+      <span style="color:rgba(139,148,158,0.5)">｜ 50% 均衡點 ｜</span>
       <span style="color:#E3B341">{z_pct}% ★</span>
     </div>
   </div>
