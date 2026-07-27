@@ -35,10 +35,10 @@ st.markdown("""
   --r:       #58A6FF;
   --r-bg:    rgba(88,166,255,0.10);
   --r-bd:    rgba(88,166,255,0.22);
-  --z:       #3FB950;
-  --z-bg:    rgba(63,185,80,0.10);
-  --z-bd:    rgba(63,185,80,0.22);
-  --ok:      #3FB950;
+  --z:       #E3B341;
+  --z-bg:    rgba(227,179,65,0.10);
+  --z-bd:    rgba(227,179,65,0.22);
+  --ok:      #E3B341;
   --wrn:     #E3B341;
   --err:     #F85149;
 }
@@ -159,7 +159,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   letter-spacing: -0.5px; line-height: 1; }
 .mt-foot { display: flex; align-items: center; gap: 6px; }
 .sb { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; padding: 1px 6px; border-radius: 3px; }
-.sb-ok   { background: rgba(63,185,80,0.14);  color: #3FB950; }
+.sb-ok   { background: rgba(227,179,65,0.14);  color: #E3B341; }
 .sb-med  { background: rgba(227,179,65,0.14);   color: #E3B341; }
 .sb-bad  { background: rgba(248,81,73,0.14);  color: #F85149; }
 .sb-info { background: rgba(121,192,255,0.14);  color: #79C0FF; }
@@ -178,7 +178,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .al { display: inline-flex; align-items: center;
   font-size: 10px; font-weight: 500; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; }
 .al-s { background: rgba(88,166,255,0.12); color: #58A6FF; }
-.al-r { background: rgba(63,185,80,0.12); color: #3FB950; }
+.al-r { background: rgba(227,179,65,0.12); color: #E3B341; }
 .al-o { background: rgba(48,54,61,0.5); color: #8B949E; }
 
 /* SIM BADGE */
@@ -517,7 +517,7 @@ if abs(lead_diff) < 3:
 elif lead_diff > 0:
     lp_color, lp_pts_str, lp_who = "#58A6FF", f"+{lead_diff}", "RANDALL 領先"
 else:
-    lp_color, lp_pts_str, lp_who = "#3FB950", f"+{abs(lead_diff)}", "ZOE 領先"
+    lp_color, lp_pts_str, lp_who = "#E3B341", f"+{abs(lead_diff)}", "ZOE 領先"
 
 # Pace visual bar (lower = faster; scale to 8.0 min/km max)
 _pace_scale = 8.0
@@ -546,19 +546,19 @@ st.markdown(f"""
     <div class="ws-player ws-player-z">
       <div class="ws-name ws-name-z">★ ZOE · STRAVA</div>
       <div class="ws-score">{z_total}<span class="ws-unit"> pts</span></div>
-      <div class="ws-pct" style="color:#3FB950">{z_pct}% 本週份額</div>
+      <div class="ws-pct" style="color:#E3B341">{z_pct}% 本週份額</div>
     </div>
   </div>
   <!-- Tug-of-war battle bar -->
   <div class="bb-wrap">
-    <div class="bb-track" style="background:rgba(63,185,80,0.22)">
+    <div class="bb-track" style="background:rgba(227,179,65,0.22)">
       <div class="bb-r" style="width:{r_pct}%"></div>
       <div class="bb-mid-line"></div>
     </div>
     <div class="bb-labels">
       <span style="color:#58A6FF">⚡ {r_pct}%</span>
       <span style="font-size:10px;color:rgba(139,148,158,0.5)">｜ 50% 均衡點 ｜</span>
-      <span style="color:#3FB950">{z_pct}% ★</span>
+      <span style="color:#E3B341">{z_pct}% ★</span>
     </div>
   </div>
   <!-- Zone 2 pace visual bars -->
@@ -573,11 +573,11 @@ st.markdown(f"""
       <span class="dl {r_pace_dl}">{r_pace_tag}</span>
     </div>
     <div class="pv-row">
-      <div class="pv-name" style="color:#3FB950">★ Zoe</div>
+      <div class="pv-name" style="color:#E3B341">★ Zoe</div>
       <div class="pv-track">
-        <div class="pv-fill" style="width:{z_bar}%;background:#3FB950"></div>
+        <div class="pv-fill" style="width:{z_bar}%;background:#E3B341"></div>
       </div>
-      <div class="pv-val" style="color:#3FB950">{z_pace}</div>
+      <div class="pv-val" style="color:#E3B341">{z_pace}</div>
       <span class="dl {z_pace_dl}">{z_pace_tag}</span>
     </div>
   </div>
@@ -599,7 +599,7 @@ with cl:
     fig = go.Figure()
     for name, col, color, fill in [
         ("⚡ Randall", "Randall 負荷", "#58A6FF", "rgba(88,166,255,0.10)"),
-        ("★ Zoe",     "Zoe 負荷",    "#3FB950", "rgba(63,185,80,0.08)"),
+        ("★ Zoe",     "Zoe 負荷",    "#E3B341", "rgba(227,179,65,0.08)"),
     ]:
         fig.add_trace(go.Scatter(
             x=df_sim["日期"], y=df_sim[col], name=name, mode="lines+markers",
@@ -619,7 +619,7 @@ with cl:
         <div class="cc-stat-lbl">⚡ Randall 本週</div>
       </div>
       <div class="cc-stat">
-        <div class="cc-stat-val" style="color:#3FB950">{z_total}</div>
+        <div class="cc-stat-val" style="color:#E3B341">{z_total}</div>
         <div class="cc-stat-lbl">★ Zoe 本週</div>
       </div>
       <div class="cc-stat">
@@ -636,7 +636,7 @@ with cr:
     fig2 = go.Figure()
     for name, col, color, fill in [
         ("⚡ Randall", "Randall 配速", "#58A6FF", "rgba(88,166,255,0.10)"),
-        ("★ Zoe",     "Zoe 配速",    "#3FB950", "rgba(63,185,80,0.08)"),
+        ("★ Zoe",     "Zoe 配速",    "#E3B341", "rgba(227,179,65,0.08)"),
     ]:
         fig2.add_trace(go.Scatter(
             x=df_sim["日期"], y=df_sim[col], name=name, mode="lines+markers",
@@ -654,7 +654,7 @@ with cr:
         <div class="cc-stat-lbl">⚡ Randall 平均</div>
       </div>
       <div class="cc-stat">
-        <div class="cc-stat-val" style="color:#3FB950">{z_pace}</div>
+        <div class="cc-stat-val" style="color:#E3B341">{z_pace}</div>
         <div class="cc-stat-lbl">★ Zoe 平均</div>
       </div>
       <div class="cc-stat">
@@ -668,7 +668,7 @@ st.markdown('<div class="cc" style="margin-top:12px"><div class="cc-title">累�
 fig_cum = go.Figure()
 for _name, _y, _color, _fill in [
     ("⚡ Randall", r_cum, "#58A6FF", "rgba(88,166,255,0.10)"),
-    ("★ Zoe",     z_cum, "#3FB950", "rgba(63,185,80,0.08)"),
+    ("★ Zoe",     z_cum, "#E3B341", "rgba(227,179,65,0.08)"),
 ]:
     fig_cum.add_trace(go.Scatter(
         x=df_sim["日期"], y=_y, name=_name, mode="lines+markers",
@@ -686,7 +686,7 @@ st.markdown(f"""
     <div class="cc-stat-lbl">⚡ Randall 7 天累積</div>
   </div>
   <div class="cc-stat">
-    <div class="cc-stat-val" style="color:#3FB950">{z_cum[-1]}</div>
+    <div class="cc-stat-val" style="color:#E3B341">{z_cum[-1]}</div>
     <div class="cc-stat-lbl">★ Zoe 7 天累積</div>
   </div>
   <div class="cc-stat">
@@ -710,7 +710,7 @@ with eq1:
     st.markdown("""
     <div class="eq">
       <div class="eq-row">
-        <div class="eq-ico" style="background:rgba(63,185,80,0.12)">🏋️</div>
+        <div class="eq-ico" style="background:rgba(227,179,65,0.12)">🏋️</div>
         <div>
           <div class="eq-lbl">Sled Push</div>
           <div class="eq-val">102 kg</div>
@@ -721,7 +721,7 @@ with eq1:
         </div>
       </div>
       <div class="progtrack">
-        <div class="progfill" style="width:100%;background:#3FB950"></div>
+        <div class="progfill" style="width:100%;background:#E3B341"></div>
       </div>
       <div class="gap-row">
         <div class="gap-item">
@@ -730,7 +730,7 @@ with eq1:
           <div class="gap-sub">上次測試</div>
         </div>
         <div class="gap-item">
-          <div class="gap-who" style="color:#3FB950">★ Zoe</div>
+          <div class="gap-who" style="color:#E3B341">★ Zoe</div>
           <div class="gap-val">105 kg</div>
           <div class="gap-sub">上次測試 ↑ +3</div>
         </div>
@@ -764,7 +764,7 @@ with eq2:
           <div class="gap-sub">最新測試</div>
         </div>
         <div class="gap-item">
-          <div class="gap-who" style="color:#3FB950">★ Zoe</div>
+          <div class="gap-who" style="color:#E3B341">★ Zoe</div>
           <div class="gap-val">— 下</div>
           <div class="gap-sub">待測試</div>
         </div>
@@ -785,9 +785,9 @@ fig_eq.add_trace(go.Bar(
 ))
 fig_eq.add_trace(go.Bar(
     name="★ Zoe", x=_eq_items, y=_z_scores,
-    marker=dict(color="#3FB950", opacity=0.82, line=dict(width=0)),
+    marker=dict(color="#E3B341", opacity=0.82, line=dict(width=0)),
     text=[f"{v}%" for v in _z_scores], textposition="outside",
-    textfont=dict(color="#3FB950", size=11),
+    textfont=dict(color="#E3B341", size=11),
 ))
 _eq_layout = chart_base()
 _eq_layout["barmode"] = "group"
@@ -795,9 +795,9 @@ _eq_layout["yaxis"]["range"] = [0, 130]
 _eq_layout["height"] = 200
 fig_eq.update_layout(**_eq_layout)
 fig_eq.add_shape(type="line", x0=-0.5, x1=1.5, y0=100, y1=100,
-                  line=dict(color="rgba(63,185,80,0.55)", width=1.5, dash="dash"))
+                  line=dict(color="rgba(227,179,65,0.55)", width=1.5, dash="dash"))
 fig_eq.add_annotation(x=1.5, y=100, text="目標 100%", showarrow=False,
-                       xanchor="left", font=dict(color="#3FB950", size=10))
+                       xanchor="left", font=dict(color="#E3B341", size=10))
 st.plotly_chart(fig_eq, use_container_width=True)
 
 # ── 5  MISSION DEBRIEF ─────────────────────────────────────────────────────────
@@ -879,7 +879,7 @@ ICON_SVG = {
 TILES = [
     ("recovery","恢復狀態","#58A6FF","rgba(88,166,255,0.10)",
      health["recovery"], r_cls, r_lbl, health["recovery_level"] or "COROS"),
-    ("sleep","睡眠評分","#3FB950","rgba(63,185,80,0.10)",
+    ("sleep","睡眠評分","#E3B341","rgba(227,179,65,0.10)",
      health["sleep_score"], s_cls, s_lbl, health["sleep_dur"] or "今晚"),
     ("hr","靜止心率","#79C0FF","rgba(121,192,255,0.10)",
      health["hr"]+" bpm" if health["hr"]!="—" else "—", h_cls, h_lbl, "今日"),
@@ -973,7 +973,7 @@ st.markdown("""
 
 if _zoe_has_real:
     _src_badge = "✓ 手動輸入" if _zoe_is_manual else "✓ 真實數據"
-    _src_color = "#3FB950"
+    _src_color = "#E3B341"
     _src_label = f"Zoe · {_zoe_source_lbl}"
     _src_meta  = f"最後更新：{zoe['updated']}"
     st.markdown(f"""
@@ -988,11 +988,11 @@ if _zoe_has_real:
       </div>
       <div class="sc-stat-row">
         <div class="sc-stat">
-          <div class="sc-stat-val" style="color:#3FB950">{zoe['count']}</div>
+          <div class="sc-stat-val" style="color:#E3B341">{zoe['count']}</div>
           <div class="sc-stat-lbl">近 7 天活動</div>
         </div>
         <div class="sc-stat">
-          <div class="sc-stat-val" style="color:#3FB950">{zoe['total_load']}</div>
+          <div class="sc-stat-val" style="color:#E3B341">{zoe['total_load']}</div>
           <div class="sc-stat-lbl">7 天總負荷</div>
         </div>
         <div class="sc-stat">
@@ -1014,12 +1014,12 @@ if _zoe_has_real:
                 _hr = f"{_a['avg_hr']} bpm" if _a.get("avg_hr") else "—"
                 _rows += f"""<tr>
                   <td style="color:#8B949E;font-size:12px">{_a.get('date','')}</td>
-                  <td><span style="color:#3FB950;font-weight:500">{str(_a.get('name',''))[:20]}</span></td>
+                  <td><span style="color:#E3B341;font-weight:500">{str(_a.get('name',''))[:20]}</span></td>
                   <td><span style="color:#8B949E;font-size:12px">{_a.get('sport','')}</span></td>
                   <td>{_km}</td>
                   <td>{_a.get('avg_pace','—')}</td>
                   <td>{_hr}</td>
-                  <td style="color:#3FB950">{_a.get('training_load','—')}</td>
+                  <td style="color:#E3B341">{_a.get('training_load','—')}</td>
                 </tr>"""
             st.markdown(f"""
             <table class="at">
