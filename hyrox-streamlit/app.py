@@ -6,7 +6,6 @@ from datetime import datetime, timedelta, timezone
 
 _TZ_TAIPEI = timezone(timedelta(hours=8))
 from pathlib import Path
-import random
 import urllib.request
 
 st.set_page_config(
@@ -530,22 +529,23 @@ _HX_RUN = 1.5   # Running: 8km backbone of HYROX
 _HX_STR = 1.2   # Strength/Functional: 8 workout stations
 _HX_ROW = 1.3   # Rowing / SkiErg: specific race events
 
-def _calc_str_tl_7d(acts_text: str) -> int:
-    """Estimate 7-day strength TL from COROS activities text."""
-    cutoff = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d")
-    total = 0
+def _calc_str_tl_by_day(acts_text: str, dates: list) -> dict:
+    """Return {date_iso: tl} for strength sessions within the given date list."""
+    result = {d: 0 for d in dates}
+    cutoff = min(dates) if dates else ""
     for block in re.split(r"\n\d+\.", acts_text)[1:]:
         if not (dm := re.search(r"(\d{4}-\d{2}-\d{2})", block)):
             continue
-        if dm.group(1) < cutoff:
+        date = dm.group(1)
+        if date < cutoff or date not in result:
             continue
         dur_min = 0
         if tm := re.search(r"Duration[:\s]*(\d+):(\d+)", block, re.I):
             dur_min = int(tm.group(1)) + int(tm.group(2)) / 60
         hr = int(hm.group(1)) if (hm := re.search(r"Avg HR[:\s]*(\d+)", block, re.I)) else 0
         intensity = min(hr / 150, 1.2) if hr > 0 else 0.7
-        total += round(dur_min * intensity)
-    return total
+        result[date] = result[date] + round(dur_min * intensity)
+    return result
 
 # ── LOAD ───────────────────────────────────────────────────────────────────────
 h_raw  = load_json(DATA / "health.json")
@@ -558,7 +558,6 @@ zoe    = parse_intervals(s_raw)
 randall_runs = parse_intervals(r_raw)
 
 # ── TREND DATA ─────────────────────────────────────────────────────────────────
-random.seed(7)
 today     = datetime.today()
 dates_iso = [(today - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6,-1,-1)]
 dates_7   = [(today - timedelta(days=i)).strftime("%m/%d")    for i in range(6,-1,-1)]
@@ -569,26 +568,24 @@ _zoe_source_lbl = ("手動輸入" if _zoe_is_manual
                    else "intervals.icu" if _zoe_has_real
                    else "模擬")
 
-# Fallback: 0 for days without records (no fake random)
-_rand_zoe_load  = [random.randint(38, 82) for _ in range(7)]
-_rand_zoe_pace  = [round(random.uniform(6.2, 7.8), 2) for _ in range(7)]
-_rand_r_pace    = [round(random.uniform(5.8, 7.2), 2) for _ in range(7)]
+# Real data only — no fake fallback
+_r_str_by_day = _calc_str_tl_by_day(a_raw.get("activities", ""), dates_iso)
+_r_run_loads  = [randall_runs["by_day"].get(d, 0) for d in dates_iso]
+_r_str_loads  = [_r_str_by_day.get(d, 0) for d in dates_iso]
+_r_loads_hx   = [round(r * _HX_RUN + s * _HX_STR) for r, s in zip(_r_run_loads, _r_str_loads)]
 
-_zoe_loads = [zoe["by_day"].get(d, 0) for d in dates_iso]
-_zoe_paces = []
-for i, d in enumerate(dates_iso):
-    real_paces = zoe.get("by_day_pace", {}).get(d)
-    _zoe_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_zoe_pace[i])
-
-_r_loads = [randall_runs["by_day"].get(d, 0) for d in dates_iso]
-_r_paces = []
-for i, d in enumerate(dates_iso):
-    real_paces = randall_runs.get("by_day_pace", {}).get(d)
-    _r_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_r_pace[i])
-
-# HYROX-weighted loads for chart (running × 1.5)
-_r_loads_hx  = [round(v * _HX_RUN) for v in _r_loads]
+_zoe_loads    = [zoe["by_day"].get(d, 0) for d in dates_iso]
 _zoe_loads_hx = [round(v * _HX_RUN) for v in _zoe_loads]
+
+_r_paces = []
+for d in dates_iso:
+    real_paces = randall_runs.get("by_day_pace", {}).get(d)
+    _r_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else 0)
+
+_zoe_paces = []
+for d in dates_iso:
+    real_paces = zoe.get("by_day_pace", {}).get(d)
+    _zoe_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else 0)
 
 df_sim = pd.DataFrame({
     "日期":         dates_7,
@@ -598,13 +595,15 @@ df_sim = pd.DataFrame({
     "Zoe 配速":     _zoe_paces,
 })
 
-# HYROX-weighted totals: run × 1.5 + strength × 1.2
-_r_str_tl = _calc_str_tl_7d(a_raw.get("activities", ""))
-r_total   = int(sum(_r_loads_hx) + _r_str_tl * _HX_STR)
+# HYROX-weighted totals: chart loads already include running + strength weighted
+_r_str_tl = sum(_r_str_loads)
+r_total   = int(sum(_r_loads_hx))
 z_total   = int(sum(_zoe_loads_hx))
 lead_diff = r_total - z_total
-r_pace    = round(df_sim["Randall 配速"].mean(), 2)
-z_pace    = round(df_sim["Zoe 配速"].mean(), 2)
+_real_r_paces = [p for p in _r_paces if p > 0]
+_real_z_paces = [p for p in _zoe_paces if p > 0]
+r_pace    = round(sum(_real_r_paces)/len(_real_r_paces), 2) if _real_r_paces else 0.0
+z_pace    = round(sum(_real_z_paces)/len(_real_z_paces), 2) if _real_z_paces else 0.0
 r_cum     = df_sim["Randall 負荷"].cumsum().tolist()
 z_cum     = df_sim["Zoe 負荷"].cumsum().tolist()
 
@@ -656,13 +655,6 @@ st.markdown("""
   <div class="sh-sub">每週日自動歸零 · Zoe 每日手動輸入</div>
 </div>
 """, unsafe_allow_html=True)
-
-# Formula breakdown for display
-_r_run_raw = int(sum(_r_loads))
-_r_run_hx  = int(sum(_r_loads_hx))
-_r_str_hx  = int(_r_str_tl * _HX_STR)
-_z_run_raw = int(sum(_zoe_loads))
-_z_run_hx  = int(sum(_zoe_loads_hx))
 
 # Battle bar calculations
 _total  = r_total + z_total
