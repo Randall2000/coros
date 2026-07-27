@@ -242,24 +242,21 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   .eq { padding: 16px 16px; gap: 14px; }
   .mt { padding: 14px 14px 12px; }
 
-  /* WAR ROOM - single-row player line on mobile */
-  .wr         { padding: 16px 14px 14px; }
-  .wr-scores  { flex-direction: column; align-items: stretch; gap: 0; margin-bottom: 16px; }
-  .ws-player  { display: flex; flex-direction: row; align-items: center;
-                justify-content: space-between; gap: 8px;
-                padding: 12px 0; border-bottom: 1px solid var(--out-v); }
-  .ws-player:last-child { border-bottom: none; padding-bottom: 4px; }
-  .ws-player-z { text-align: left; }
-  .ws-name    { font-size: 13px; letter-spacing: 0.3px; margin-bottom: 0;
-                white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-                flex: 1; min-width: 0; }
-  .ws-score   { font-size: 22px !important; letter-spacing: -0.5px; line-height: 1;
-                white-space: nowrap; flex-shrink: 0; }
-  .ws-unit    { font-size: 13px; }
-  .ws-pct     { font-size: 13px; margin-top: 0; white-space: nowrap; flex-shrink: 0; }
-  .ws-mid     { padding: 12px 0; border-bottom: 1px solid var(--out-v); text-align: center; }
-  .ws-lead-pts { font-size: 24px !important; white-space: nowrap; }
-  .ws-lead-lbl { font-size: 13px; white-space: nowrap; }
+  /* WAR ROOM - 3-column horizontal layout on mobile */
+  .wr          { padding: 14px 12px 12px; }
+  .wr-scores   { flex-direction: row; align-items: flex-end;
+                 justify-content: space-between; margin-bottom: 14px; flex-wrap: nowrap; }
+  .ws-player   { flex: 1; min-width: 0; }
+  .ws-player-z { text-align: right; }
+  .ws-name     { font-size: 10px; letter-spacing: 0.5px; margin-bottom: 4px;
+                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ws-score    { font-size: 26px !important; letter-spacing: -1px; line-height: 1;
+                 white-space: nowrap; }
+  .ws-unit     { font-size: 12px; }
+  .ws-pct      { font-size: 11px; margin-top: 3px; white-space: nowrap; }
+  .ws-mid      { flex-shrink: 0; padding: 0 6px; text-align: center; }
+  .ws-lead-pts { font-size: 22px !important; white-space: nowrap; }
+  .ws-lead-lbl { font-size: 10px; white-space: nowrap; }
 
   /* Battle bar labels */
   .bb-labels  { font-size: 20px; margin-top: 10px; }
