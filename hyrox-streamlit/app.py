@@ -46,9 +46,9 @@ st.markdown("""
 html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: var(--bg) !important;
   font-family: 'Roboto', system-ui, sans-serif;
-  color: var(--on); font-size: 14px; line-height: 1.5;
+  color: var(--on); font-size: 16px; line-height: 1.5;
 }
-.block-container { padding: 20px 24px 64px !important; max-width: 100% !important; }
+.block-container { padding: 20px 16px 72px !important; max-width: 100% !important; }
 
 /* PAGE HEADER */
 .ph { padding-bottom: 14px; border-bottom: 1px solid var(--out); margin-bottom: 0; }
@@ -213,6 +213,47 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: #58A6FF !important; color: #0D1117 !important;
   border: none !important; border-radius: 20px !important;
   font-weight: 500 !important; font-size: 14px !important; height: 40px !important; }
+
+/* ── MOBILE FIRST ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Stack all st.columns() vertically */
+  [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 8px !important; }
+  [data-testid="column"] { min-width: 100% !important; flex: 1 1 100% !important; }
+
+  /* Card padding reduction */
+  .wr  { padding: 14px 14px 12px; border-radius: 12px; }
+  .sc  { padding: 14px 14px; border-radius: 10px; }
+  .cc  { padding: 12px 12px 4px; }
+  .eq  { padding: 12px 14px; gap: 10px; }
+  .mt  { padding: 10px 10px 8px; }
+
+  /* Score sizes */
+  .ws-score    { font-size: 38px !important; letter-spacing: -1px; }
+  .ws-lead-pts { font-size: 20px !important; }
+
+  /* Pace bar */
+  .pv-name { width: 56px; }
+  .pv-val  { width: 48px; font-size: 12px; }
+
+  /* Stats wrap to 2×2 */
+  .sc-stat-row  { flex-wrap: wrap; }
+  .sc-stat      { min-width: 50%; }
+  .sc-stat-val  { font-size: 15px; }
+
+  /* Touch-friendly form inputs (prevent iOS zoom) */
+  [data-testid="stNumberInput"] input,
+  [data-testid="stTextInput"] input,
+  [data-testid="stSelectbox"] select,
+  [data-testid="stDateInput"] input { min-height: 44px !important; font-size: 16px !important; }
+
+  /* Expander touch target */
+  [data-testid="stExpander"] summary { min-height: 44px !important; display: flex !important;
+    align-items: center !important; }
+
+  /* Chart overflow guard */
+  [data-testid="stVegaLiteChart"], [data-testid="stArrowVegaLiteChart"],
+  [data-testid="stPlotlyChart"] { max-width: 100% !important; overflow-x: hidden !important; }
+}
 </style>
 """, unsafe_allow_html=True)
 
