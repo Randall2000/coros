@@ -389,14 +389,12 @@ def chart_base(reverse_y=False):
         legend=dict(
             orientation="h", yanchor="bottom", y=1.04, xanchor="right", x=1,
             font=dict(size=11, color="#CAC4D0"), bgcolor="rgba(0,0,0,0)",
-            itemgap=12,
         ),
         margin=dict(l=8, r=8, t=36, b=8),
         hovermode="x unified",
         hoverlabel=dict(
             bgcolor="#2B2930", bordercolor="rgba(202,196,208,0.2)",
             font=dict(color="#E6E1E5", size=12),
-            namelength=-1,
         ),
     )
     if reverse_y: base["yaxis"]["autorange"] = "reversed"
