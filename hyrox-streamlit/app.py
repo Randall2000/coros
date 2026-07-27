@@ -1,10 +1,11 @@
-import re, sqlite3, json
+import re, sqlite3, json, base64
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from pathlib import Path
 import random
+import urllib.request
 
 st.set_page_config(
     page_title="HYROX War Room · Randall & Zoe",
@@ -218,6 +219,81 @@ _candidates = [_here.parent / "data", _here.parent / "hyrox-dashboard" / "data"]
 DATA = next((p for p in _candidates if p.exists()), _candidates[0])
 DB   = _here / "hyrox_review.db"
 
+# ── GITHUB WRITE-BACK ──────────────────────────────────────────────────────────
+_GH_REPO      = "Randall2000/coros"
+_GH_FILE_PATH = "data/strava.json"
+_GH_API_BASE  = "https://api.github.com"
+
+def _gh_get(token: str, path: str) -> dict:
+    req = urllib.request.Request(
+        f"{_GH_API_BASE}{path}",
+        headers={"Authorization": f"token {token}",
+                 "Accept": "application/vnd.github+json",
+                 "User-Agent": "hyrox-app"})
+    with urllib.request.urlopen(req) as r:
+        return json.loads(r.read())
+
+def _gh_put(token: str, path: str, payload: dict):
+    data = json.dumps(payload).encode()
+    req = urllib.request.Request(
+        f"{_GH_API_BASE}{path}", data=data, method="PUT",
+        headers={"Authorization": f"token {token}",
+                 "Accept": "application/vnd.github+json",
+                 "Content-Type": "application/json",
+                 "User-Agent": "hyrox-app"})
+    with urllib.request.urlopen(req) as r:
+        return json.loads(r.read())
+
+def _pace_to_float(pace_str: str) -> float | None:
+    """'5:30' → 5.5"""
+    try:
+        m, s = pace_str.strip().split(":")
+        return round(int(m) + int(s) / 60, 4)
+    except Exception:
+        return None
+
+def write_zoe_activity(new_act: dict) -> tuple[bool, str]:
+    """新增一筆 Zoe 訓練，寫回 GitHub strava.json。回傳 (ok, message)。"""
+    token = st.secrets.get("GITHUB_TOKEN", "")
+    if not token:
+        return False, "未設定 GITHUB_TOKEN secret，無法儲存"
+    try:
+        info = _gh_get(token, f"/repos/{_GH_REPO}/contents/{_GH_FILE_PATH}")
+        sha  = info["sha"]
+        old  = json.loads(base64.b64decode(info["content"]).decode())
+    except Exception:
+        sha  = None
+        old  = {"source": "manual", "updatedAt": "", "activities_7d": [], "summary_7d": {}}
+
+    old.setdefault("activities_7d", [])
+    old["activities_7d"].insert(0, new_act)
+    cutoff = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d")
+    old["activities_7d"] = [a for a in old["activities_7d"] if a.get("date", "") >= cutoff]
+
+    acts7 = old["activities_7d"]
+    total_load = sum(a.get("training_load", 0) for a in acts7)
+    total_km   = round(sum(a.get("distance_km", 0) for a in acts7), 2)
+    paces      = [a["avg_pace_float"] for a in acts7 if a.get("avg_pace_float")]
+    avg_pace_f = round(sum(paces) / len(paces), 4) if paces else None
+    avg_pace_s = f"{int(avg_pace_f)}:{round((avg_pace_f % 1)*60):02d}" if avg_pace_f else "—"
+
+    old["source"]     = "manual"
+    old["updatedAt"]  = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    old["summary_7d"] = {
+        "total_load":        total_load,
+        "total_distance_km": total_km,
+        "avg_pace":          avg_pace_s,
+        "avg_pace_float":    avg_pace_f,
+        "activity_count":    len(acts7),
+    }
+    content_b64 = base64.b64encode(json.dumps(old, ensure_ascii=False, indent=2).encode()).decode()
+    payload = {"message": f"data: Zoe 手動新增 {new_act['date']} {new_act['name']}",
+               "content": content_b64}
+    if sha:
+        payload["sha"] = sha
+    _gh_put(token, f"/repos/{_GH_REPO}/contents/{_GH_FILE_PATH}", payload)
+    return True, "已儲存！"
+
 # ── SQLITE ─────────────────────────────────────────────────────────────────────
 def init_db():
     conn = sqlite3.connect(DB)
@@ -282,7 +358,7 @@ def parse_intervals(s: dict) -> dict:
              "total_load": 0, "avg_pace": "—", "avg_pace_float": None,
              "total_km": 0, "atl": None, "ctl": None, "count": 0,
              "by_day": {}}
-    if not s or s.get("source") not in ("intervals.icu", "strava"):
+    if not s or s.get("source") not in ("intervals.icu", "strava", "manual"):
         return empty
     summ = s.get("summary_7d", {})
     acts = s.get("activities_7d", [])
@@ -349,7 +425,10 @@ dates_iso = [(today - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6,-
 dates_7   = [(today - timedelta(days=i)).strftime("%m/%d")    for i in range(6,-1,-1)]
 
 _zoe_has_real  = bool(zoe["source"])
-_zoe_source_lbl = "intervals.icu" if _zoe_has_real else "模擬"
+_zoe_is_manual = zoe.get("source") == "manual"
+_zoe_source_lbl = ("手動輸入" if _zoe_is_manual
+                   else "intervals.icu" if _zoe_has_real
+                   else "模擬")
 
 # Zoe load: use real by-day sums when available, fall back to simulation
 _rand_zoe_load  = [random.randint(38, 82) for _ in range(7)]
@@ -883,27 +962,29 @@ with bio_desc_col:
       </div>
     </div>""", unsafe_allow_html=True)
 
-# ── 6b  ZOE · INTERVALS.ICU ───────────────────────────────────────────────────
+# ── 6b  ZOE · 訓練數據 ────────────────────────────────────────────────────────
 st.markdown("""
 <div class="sh">
-  <div class="sh-tag">ZOE · INTERVALS.ICU</div>
+  <div class="sh-tag">ZOE · 訓練數據</div>
   <div class="sh-title">★ Zoe 的訓練數據</div>
-  <div class="sh-sub">Strava 自動同步 · 每 6 小時更新</div>
+  <div class="sh-sub">每日手動輸入 · 7 天滾動統計</div>
 </div>
 """, unsafe_allow_html=True)
 
 if _zoe_has_real:
-    _atl_str = f"{zoe['atl']}" if zoe["atl"] else "—"
-    _ctl_str = f"{zoe['ctl']}" if zoe["ctl"] else "—"
+    _src_badge = "✓ 手動輸入" if _zoe_is_manual else "✓ 真實數據"
+    _src_color = "#60A5FA"
+    _src_label = f"Zoe · {_zoe_source_lbl}"
+    _src_meta  = f"最後更新：{zoe['updated']}"
     st.markdown(f"""
     <div class="sc">
       <div class="sc-row">
         <div class="sc-avatar" style="background:var(--z-bg)">★</div>
         <div>
-          <div class="sc-name" style="color:#60A5FA">Zoe · intervals.icu 已串接</div>
-          <div class="sc-meta">資料來源：Strava API · 最後同步 {zoe['updated']}</div>
+          <div class="sc-name" style="color:{_src_color}">{_src_label}</div>
+          <div class="sc-meta">{_src_meta}</div>
         </div>
-        <span class="sb sb-ok" style="margin-left:auto">✓ 真實數據</span>
+        <span class="sb sb-ok" style="margin-left:auto">{_src_badge}</span>
       </div>
       <div class="sc-stat-row">
         <div class="sc-stat">
@@ -919,31 +1000,26 @@ if _zoe_has_real:
           <div class="sc-stat-lbl">7 天總距離</div>
         </div>
         <div class="sc-stat">
-          <div class="sc-stat-val">{_atl_str}</div>
-          <div class="sc-stat-lbl">ATL（7 日負荷）</div>
-        </div>
-        <div class="sc-stat">
-          <div class="sc-stat-val">{_ctl_str}</div>
-          <div class="sc-stat-lbl">CTL（42 日體能）</div>
+          <div class="sc-stat-val">{zoe['avg_pace']}</div>
+          <div class="sc-stat-lbl">平均配速</div>
         </div>
       </div>
     </div>""", unsafe_allow_html=True)
 
-    # Recent activities mini table
     if zoe["activities"]:
         with st.expander("★ Zoe 近期活動明細", expanded=False):
             _rows = ""
             for _a in zoe["activities"][:6]:
-                _km = f"{_a['distance_km']} km" if _a.get("distance_km") else "—"
+                _km = f"{_a.get('distance_km', '—')} km" if _a.get("distance_km") else "—"
                 _hr = f"{_a['avg_hr']} bpm" if _a.get("avg_hr") else "—"
                 _rows += f"""<tr>
-                  <td style="color:#CAC4D0;font-size:12px">{_a['date']}</td>
-                  <td><span style="color:#60A5FA;font-weight:500">{_a['name'][:20]}</span></td>
-                  <td><span style="color:#CAC4D0;font-size:12px">{_a['sport']}</span></td>
+                  <td style="color:#CAC4D0;font-size:12px">{_a.get('date','')}</td>
+                  <td><span style="color:#60A5FA;font-weight:500">{str(_a.get('name',''))[:20]}</span></td>
+                  <td><span style="color:#CAC4D0;font-size:12px">{_a.get('sport','')}</span></td>
                   <td>{_km}</td>
-                  <td>{_a['avg_pace']}</td>
+                  <td>{_a.get('avg_pace','—')}</td>
                   <td>{_hr}</td>
-                  <td style="color:#60A5FA">{_a['training_load']}</td>
+                  <td style="color:#60A5FA">{_a.get('training_load','—')}</td>
                 </tr>"""
             st.markdown(f"""
             <table class="at">
@@ -959,22 +1035,46 @@ else:
       <div class="sc-row">
         <div class="sc-avatar" style="background:var(--z-bg)">★</div>
         <div>
-          <div class="sc-name">Zoe 的 intervals.icu 尚未設定</div>
-          <div class="sc-meta">完成以下步驟後，Zoe 的訓練數據將自動取代模擬資料</div>
+          <div class="sc-name">Zoe 尚未輸入訓練資料</div>
+          <div class="sc-meta">使用下方表單新增第一筆訓練，統計數據就會顯示</div>
         </div>
-        <span class="sb sb-med" style="margin-left:auto">⚠ 模擬中</span>
+        <span class="sb sb-med" style="margin-left:auto">尚無資料</span>
       </div>
     </div>""", unsafe_allow_html=True)
-    st.markdown("""
-    **設定步驟（Zoe 操作一次）**
 
-    1. 去 [intervals.icu](https://intervals.icu) 建立免費帳號，連結 Strava
-    2. 開 Settings → API Key，複製 Athlete ID 和 API Key
-    3. 把以下兩個 secret 加進 GitHub repo Settings → Secrets：
-       - `INTERVALS_ATHLETE_ID` = `i123456`（你的 ID）
-       - `INTERVALS_API_KEY` = 複製的 API Key
-    4. 在 GitHub Actions 手動觸發 **Sync intervals.icu (Zoe)** 一次
-    """, unsafe_allow_html=False)
+# ── Zoe 手動輸入表單 ────────────────────────────────────────────────────────────
+with st.expander("★ Zoe · 新增訓練記錄", expanded=not _zoe_has_real):
+    with st.form("zoe_input_form", clear_on_submit=True):
+        _col1, _col2 = st.columns(2)
+        with _col1:
+            _fi_date  = st.date_input("日期", value=datetime.today())
+            _fi_name  = st.text_input("名稱", placeholder="例：晨跑、午間跑步")
+            _fi_sport = st.selectbox("運動類型", ["Run","Strength","Cycling","Swimming","Walk","Other"])
+            _fi_load  = st.number_input("訓練負荷", min_value=0, max_value=500, value=60, step=1)
+        with _col2:
+            _fi_km    = st.number_input("距離（km）", min_value=0.0, max_value=200.0, value=0.0, step=0.1)
+            _fi_pace  = st.text_input("平均配速（mm:ss）", placeholder="例：5:30")
+            _fi_hr    = st.number_input("平均心率（bpm，0 = 略過）", min_value=0, max_value=250, value=0, step=1)
+        _submit = st.form_submit_button("儲存訓練")
+
+    if _submit:
+        _pace_f = _pace_to_float(_fi_pace) if _fi_pace.strip() else None
+        _new_act = {
+            "date":           _fi_date.strftime("%Y-%m-%d"),
+            "name":           _fi_name or _fi_sport,
+            "sport":          _fi_sport,
+            "training_load":  int(_fi_load),
+            "distance_km":    float(_fi_km) if _fi_km > 0 else None,
+            "avg_pace":       _fi_pace.strip() if _fi_pace.strip() else "—",
+            "avg_pace_float": _pace_f,
+            "avg_hr":         int(_fi_hr) if _fi_hr > 0 else None,
+        }
+        with st.spinner("儲存中..."):
+            _ok, _msg = write_zoe_activity(_new_act)
+        if _ok:
+            st.success(_msg + " 請稍候幾秒後重新整理頁面。")
+        else:
+            st.error(_msg)
 
 # ── 7  TRAINING LOG ────────────────────────────────────────────────────────────
 with st.expander("📋 Show Full Training Log — Randall · COROS", expanded=False):
