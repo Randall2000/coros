@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from pathlib import Path
 import random
+import strava_auth
 
 st.set_page_config(
     page_title="HYROX War Room · Randall & Zoe",
@@ -185,6 +186,22 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
   background: rgba(255,224,130,0.12); color: #FFE082; margin-left: 8px; }
 
+/* STRAVA CONNECT */
+.sc { background: var(--surf); border: 1px solid var(--out-v);
+  border-radius: 14px; padding: 22px 24px; }
+.sc-row { display: flex; align-items: center; gap: 16px; }
+.sc-avatar { width: 44px; height: 44px; border-radius: 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0; }
+.sc-name { font-size: 13px; font-weight: 500; color: var(--on); }
+.sc-meta { font-size: 11px; color: var(--on-v); margin-top: 2px; }
+.sc-stat-row { display: flex; gap: 0; margin-top: 16px; border: 1px solid var(--out-v);
+  border-radius: 10px; overflow: hidden; }
+.sc-stat { flex: 1; padding: 10px 14px; border-right: 1px solid var(--out-v); }
+.sc-stat:last-child { border-right: none; }
+.sc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 16px; color: var(--on); }
+.sc-stat-lbl { font-size: 10px; color: var(--on-v); margin-top: 1px; }
+
 /* Streamlit overrides */
 [data-testid="stExpander"] { background: var(--surf) !important;
   border: 1px solid var(--out-v) !important; border-radius: 12px !important; }
@@ -230,6 +247,9 @@ def load_history():
     conn.close(); return df
 
 init_db()
+
+# Handle Strava OAuth redirect (must run before any st.markdown)
+strava_auth.handle_oauth_callback()
 
 # ── DATA LOADERS ───────────────────────────────────────────────────────────────
 def load_json(path):
@@ -810,6 +830,109 @@ with bio_desc_col:
         <div><span class="sb {_bio_grade[0]}" style="display:inline-block;margin-bottom:4px">{_bio_grade[1]}</span><div style="font-size:10px;color:rgba(202,196,208,0.5)">綜合生物指數 / 100</div></div>
       </div>
     </div>""", unsafe_allow_html=True)
+
+# ── 6b  ZOE · STRAVA ──────────────────────────────────────────────────────────
+st.markdown("""
+<div class="sh">
+  <div class="sh-tag">ZOE · STRAVA</div>
+  <div class="sh-title">★ Zoe 的 Strava 串接</div>
+  <div class="sh-sub">授權一次，訓練數據自動更新</div>
+</div>
+""", unsafe_allow_html=True)
+
+_zoe_token = strava_auth.get_valid_token()
+
+if _zoe_token:
+    _athlete_id  = _zoe_token.get("athlete_id") or "—"
+    _scope       = _zoe_token.get("scope") or "activity:read_all"
+    _updated     = _zoe_token.get("updated_at") or "—"
+    # Fetch recent activity summary
+    try:
+        _acts = strava_auth.fetch_recent_activities(limit=5)
+        _act_count  = len(_acts)
+        _latest_act = _acts[0].get("name","—") if _acts else "—"
+        _latest_km  = round(_acts[0].get("distance", 0) / 1000, 1) if _acts else 0
+        _fetch_err  = None
+    except Exception as _e:
+        _act_count, _latest_act, _latest_km, _fetch_err = 0, "—", 0, str(_e)
+
+    st.markdown(f"""
+    <div class="sc">
+      <div class="sc-row">
+        <div class="sc-avatar" style="background:var(--z-bg)">★</div>
+        <div>
+          <div class="sc-name" style="color:#60A5FA">Zoe · 已連結 Strava</div>
+          <div class="sc-meta">Athlete #{_athlete_id} · Scope: {_scope}</div>
+          <div class="sc-meta" style="margin-top:4px">授權時間：{_updated}</div>
+        </div>
+        <span class="sb sb-ok" style="margin-left:auto">✓ 連結中</span>
+      </div>
+      <div class="sc-stat-row">
+        <div class="sc-stat">
+          <div class="sc-stat-val" style="color:#60A5FA">{_act_count}</div>
+          <div class="sc-stat-lbl">近期活動筆數</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-val">{_latest_act[:18]}</div>
+          <div class="sc-stat-lbl">最新活動名稱</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-val">{_latest_km} km</div>
+          <div class="sc-stat-lbl">最新距離</div>
+        </div>
+      </div>
+    </div>""", unsafe_allow_html=True)
+
+    if _fetch_err:
+        st.warning(f"API 回傳錯誤：{_fetch_err}")
+
+    _col_sync, _col_revoke, _ = st.columns([1.2, 1, 4])
+    with _col_sync:
+        if st.button("手動同步最新活動", use_container_width=True):
+            with st.spinner("拉取 Strava 資料中…"):
+                try:
+                    _acts_new = strava_auth.fetch_recent_activities(limit=10)
+                    import json as _json
+                    (DATA / "strava.json").write_text(_json.dumps({
+                        "updatedAt": datetime.utcnow().isoformat() + "Z",
+                        "activities": _acts_new,
+                    }, ensure_ascii=False, indent=2))
+                    st.success(f"已同步 {len(_acts_new)} 筆活動")
+                    st.rerun()
+                except Exception as _e:
+                    st.error(f"同步失敗：{_e}")
+    with _col_revoke:
+        if st.button("解除授權", use_container_width=True):
+            strava_auth.revoke_token()
+            st.rerun()
+
+else:
+    _no_secrets = not strava_auth._client_id()
+    if _no_secrets:
+        st.markdown("""
+        <div class="sc">
+          <div class="sc-row">
+            <div class="sc-avatar" style="background:rgba(239,154,154,0.12)">⚠️</div>
+            <div>
+              <div class="sc-name">尚未設定 Strava API 憑證</div>
+              <div class="sc-meta">請在 Streamlit Secrets 加入 strava_client_id / strava_client_secret / strava_redirect_uri</div>
+            </div>
+          </div>
+        </div>""", unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div class="sc">
+          <div class="sc-row">
+            <div class="sc-avatar" style="background:var(--z-bg)">★</div>
+            <div>
+              <div class="sc-name">Zoe 尚未連結 Strava</div>
+              <div class="sc-meta">點擊授權後，訓練數據將自動取代模擬資料</div>
+            </div>
+            <span class="sb sb-med" style="margin-left:auto">⚠ 模擬中</span>
+          </div>
+        </div>""", unsafe_allow_html=True)
+        st.link_button("★ 連結 Zoe 的 Strava", strava_auth.auth_url(),
+                        use_container_width=False)
 
 # ── 7  TRAINING LOG ────────────────────────────────────────────────────────────
 with st.expander("📋 Show Full Training Log — Randall · COROS", expanded=False):
