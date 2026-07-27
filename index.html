@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HYROX 備賽儀表板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-brand">
+    <span class="nav-logo">HYROX</span>
+    <span class="nav-slash">/</span>
+    <span class="nav-sub">備賽儀表板</span>
+  </div>
+  <div class="nav-center">
+    <div class="countdown-chip" id="countdown">—</div>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-sync" id="syncBtn" onclick="forceRefresh()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      同步
+    </button>
+    <span class="sync-time" id="syncTime"></span>
+  </div>
+</header>
+
+<main>
+
+  <!-- HEALTH STATUS -->
+  <section class="section">
+    <div class="section-label">今日狀態 <span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+    <div class="health-grid">
+
+      <div class="health-card" id="card-recovery">
+        <div class="health-card-top">
+          <svg class="h-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span class="health-label">恢復狀態</span>
+        </div>
+        <div class="health-value" id="val-recovery">—</div>
+        <div class="health-sub" id="sub-recovery">載入中</div>
+      </div>
+
+      <div class="health-card" id="card-sleep">
+        <div class="health-card-top">
+          <svg class="h-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span class="health-label">睡眠評分</span>
+        </div>
+        <div class="health-value" id="val-sleep">—</div>
+        <div class="health-sub" id="sub-sleep">載入中</div>
+      </div>
+
+      <div class="health-card" id="card-hr">
+        <div class="health-card-top">
+          <svg class="h-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="health-label">靜止心率</span>
+        </div>
+        <div class="health-value" id="val-hr">—</div>
+        <div class="health-sub" id="sub-hr">bpm</div>
+      </div>
+
+      <div class="health-card" id="card-stress">
+        <div class="health-card-top">
+          <svg class="h-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span class="health-label">壓力指數</span>
+        </div>
+        <div class="health-value" id="val-stress">—</div>
+        <div class="health-sub" id="sub-stress">載入中</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CALENDAR + TRAINING -->
+  <section class="section two-col-main">
+
+    <!-- CALENDAR -->
+    <div class="calendar-wrap">
+      <div class="cal-top">
+        <div class="section-label" style="margin:0">訓練日曆</div>
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="calPrevMonth()" aria-label="上個月">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="cal-month-label" id="calMonthLabel"></span>
+          <button class="cal-nav-btn" onclick="calNextMonth()" aria-label="下個月">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="cal-weekdays">
+        <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+      </div>
+      <div class="cal-days" id="calDays"></div>
+
+      <div class="cal-legend">
+        <span><span class="cal-badge day-a">A</span>有氧</span>
+        <span><span class="cal-badge day-b">B</span>功能</span>
+        <span><span class="cal-badge day-c">C</span>模擬</span>
+        <span><span class="cal-dot-dot logged-dot"></span>已記錄</span>
+        <span><span class="cal-dot-dot deload-dot"></span>減量</span>
+      </div>
+
+      <div class="day-detail" id="dayDetail" style="display:none">
+        <div class="day-detail-header">
+          <span class="day-detail-date" id="dayDetailDate"></span>
+          <button class="day-detail-close" onclick="document.getElementById('dayDetail').style.display='none'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="dayDetailContent"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COL: TODAY + ACTIVITY -->
+    <div class="right-col">
+      <div class="today-card">
+        <div class="today-top">
+          <span class="today-week-badge" id="todayBadge">W1</span>
+          <span class="today-phase" id="todayPhase">—</span>
+          <span class="today-deload" id="todayDeload" style="display:none">減量週</span>
+        </div>
+        <div class="today-theme" id="todayTheme">—</div>
+        <div class="today-sessions" id="todaySessions"></div>
+      </div>
+
+      <div class="activity-card">
+        <div class="section-label" style="margin-bottom:0.75rem">最近 Coros 紀錄</div>
+        <div class="activity-content" id="activityContent"><span class="loading-text">載入中...</span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- 32-WEEK PLAN -->
+  <section class="section">
+    <div class="plan-header-row">
+      <div class="section-label" style="margin:0">32 週備賽計畫</div>
+      <div class="phase-legend-row">
+        <span><span class="pl-dot" style="background:var(--phase-1)"></span>基礎 W1–8</span>
+        <span><span class="pl-dot" style="background:var(--phase-2)"></span>增量 W9–18</span>
+        <span><span class="pl-dot" style="background:var(--phase-3)"></span>專項 W19–27</span>
+        <span><span class="pl-dot" style="background:var(--phase-4)"></span>減量 W28–32</span>
+      </div>
+    </div>
+    <div class="plan-table-wrap">
+      <table class="plan-table">
+        <thead>
+          <tr>
+            <th>週</th><th>日期</th><th>狀態</th><th>主題</th>
+            <th>Day A 有氧</th><th>Day B 功能</th><th>Day C 模擬</th>
+          </tr>
+        </thead>
+        <tbody id="planBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script src="plan.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

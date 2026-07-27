@@ -1,0 +1,51 @@
+name: Sync Coros Data
+
+on:
+  schedule:
+    - cron: '0 1 * * *'   # 每天 09:00 台北時間
+  workflow_dispatch:        # 手動觸發
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install coros-mcp
+        run: npm install -g coros-mcp
+
+      - name: Setup Coros token
+        env:
+          COROS_ACCESS_TOKEN: ${{ secrets.COROS_ACCESS_TOKEN }}
+          COROS_REFRESH_TOKEN: ${{ secrets.COROS_REFRESH_TOKEN }}
+          COROS_CLIENT_ID: ${{ secrets.COROS_CLIENT_ID }}
+        run: |
+          mkdir -p ~/.coros-mcp-skill-gateway-ts/us
+          cat > ~/.coros-mcp-skill-gateway-ts/us/token.json << EOF
+          {
+            "access_token": "$COROS_ACCESS_TOKEN",
+            "refresh_token": "$COROS_REFRESH_TOKEN",
+            "expires_at_epoch": 9999999999,
+            "token_type": "Bearer",
+            "scope": "mcp.tools openid offline_access",
+            "client_id": "$COROS_CLIENT_ID"
+          }
+          EOF
+
+      - name: Fetch Coros data
+        run: node scripts/fetch-data.js
+
+      - name: Commit & push data
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/
+          git diff --cached --quiet || git commit -m "sync: Coros data $(date -u +%Y-%m-%d)"
+          git push
