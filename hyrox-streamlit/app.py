@@ -749,7 +749,7 @@ st.markdown("""
 cl, cr = st.columns(2)
 
 with cl:
-    st.markdown('<div class="cc"><div class="cc-title">訓練負荷</div><div class="cc-sub">Training Load · RANDALL vs ZOE <span class="sim">⚠ 模擬</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="cc"><div class="cc-title">訓練負荷</div><div class="cc-sub">Training Load · RANDALL vs ZOE</div>', unsafe_allow_html=True)
     fig = go.Figure()
     for name, col, color, fill in [
         ("⚡ Randall", "Randall 負荷", "#58A6FF", "rgba(88,166,255,0.10)"),
@@ -786,7 +786,7 @@ with cr:
     pace_diff = round(r_pace - z_pace, 2)
     pace_dl = "dl-r" if pace_diff <= 0 else "dl-z"
     pace_sign = "+" if pace_diff >= 0 else ""
-    st.markdown('<div class="cc"><div class="cc-title">Zone 2 配速</div><div class="cc-sub">min/km · 數值越小代表越快 <span class="sim">⚠ 模擬</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="cc"><div class="cc-title">Zone 2 配速</div><div class="cc-sub">min/km · 數值越小代表越快</div>', unsafe_allow_html=True)
     fig2 = go.Figure()
     for name, col, color, fill in [
         ("⚡ Randall", "Randall 配速", "#58A6FF", "rgba(88,166,255,0.10)"),
@@ -818,7 +818,7 @@ with cr:
     </div>""", unsafe_allow_html=True)
 
 # Cumulative load chart — full width
-st.markdown('<div class="cc" style="margin-top:12px"><div class="cc-title">累積訓練量趨勢</div><div class="cc-sub">Cumulative Load · 過去 7 天 <span class="sim">⚠ 模擬</span></div>', unsafe_allow_html=True)
+st.markdown('<div class="cc" style="margin-top:12px"><div class="cc-title">累積訓練量趨勢</div><div class="cc-sub">Cumulative Load · 過去 7 天</div>', unsafe_allow_html=True)
 fig_cum = go.Figure()
 for _name, _y, _color, _fill in [
     ("⚡ Randall", r_cum, "#58A6FF", "rgba(88,166,255,0.10)"),
@@ -926,22 +926,15 @@ with eq2:
     </div>""", unsafe_allow_html=True)
 
 # Equipment readiness bar chart — full width
-st.markdown('<div class="cc" style="margin-top:16px"><div class="cc-title">器材達標率對比</div><div class="cc-sub">相對 Women\'s Doubles 官方標準 100% <span class="sim">⚠ Zoe 模擬</span></div>', unsafe_allow_html=True)
+st.markdown('<div class="cc" style="margin-top:16px"><div class="cc-title">器材達標率</div><div class="cc-sub">相對 Women\'s Doubles 官方標準 100% · Randall 實測</div>', unsafe_allow_html=True)
 _eq_items   = ["Sled Push (102 kg)", "Wall Balls (75 下)"]
 _r_scores   = [100, wb_pct]
-_z_scores   = [103, 50]
 fig_eq = go.Figure()
 fig_eq.add_trace(go.Bar(
     name="⚡ Randall", x=_eq_items, y=_r_scores,
     marker=dict(color="#58A6FF", opacity=0.82, line=dict(width=0)),
     text=[f"{v}%" for v in _r_scores], textposition="outside",
     textfont=dict(color="#58A6FF", size=11),
-))
-fig_eq.add_trace(go.Bar(
-    name="★ Zoe", x=_eq_items, y=_z_scores,
-    marker=dict(color="#E3B341", opacity=0.82, line=dict(width=0)),
-    text=[f"{v}%" for v in _z_scores], textposition="outside",
-    textfont=dict(color="#E3B341", size=11),
 ))
 _eq_layout = chart_base()
 _eq_layout["barmode"] = "group"
