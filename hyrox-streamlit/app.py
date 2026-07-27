@@ -5,7 +5,6 @@ import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from pathlib import Path
 import random
-import strava_auth
 
 st.set_page_config(
     page_title="HYROX War Room · Randall & Zoe",
@@ -248,9 +247,6 @@ def load_history():
 
 init_db()
 
-# Handle Strava OAuth redirect (must run before any st.markdown)
-strava_auth.handle_oauth_callback()
-
 # ── DATA LOADERS ───────────────────────────────────────────────────────────────
 def load_json(path):
     try: return json.loads(path.read_text())
@@ -280,6 +276,43 @@ def parse_health(h):
         except: pass
     return d
 
+def parse_intervals(s: dict) -> dict:
+    """Parse data/strava.json (written by fetch_intervals.py)."""
+    empty = {"source": None, "updated": "", "activities": [],
+             "total_load": 0, "avg_pace": "—", "avg_pace_float": None,
+             "total_km": 0, "atl": None, "ctl": None, "count": 0,
+             "by_day": {}}
+    if not s or s.get("source") != "intervals.icu":
+        return empty
+    summ = s.get("summary_7d", {})
+    acts = s.get("activities_7d", [])
+    by_day: dict[str, int] = {}
+    by_day_pace: dict[str, list] = {}
+    for a in acts:
+        d = a.get("date", "")
+        by_day[d]      = by_day.get(d, 0) + (a.get("training_load") or 0)
+        if a.get("avg_pace_float"):
+            by_day_pace.setdefault(d, []).append(a["avg_pace_float"])
+    ts = s.get("updatedAt", "")
+    try:
+        updated = datetime.fromisoformat(ts.replace("Z","+00:00")).strftime("%m/%d %H:%M")
+    except Exception:
+        updated = ts[:16]
+    return {
+        "source":         s.get("source"),
+        "updated":        updated,
+        "activities":     acts,
+        "total_load":     summ.get("total_load", 0),
+        "avg_pace":       summ.get("avg_pace", "—"),
+        "avg_pace_float": summ.get("avg_pace_float"),
+        "total_km":       summ.get("total_distance_km", 0),
+        "atl":            summ.get("atl"),
+        "ctl":            summ.get("ctl"),
+        "count":          summ.get("activity_count", 0),
+        "by_day":         by_day,
+        "by_day_pace":    by_day_pace,
+    }
+
 def parse_activities(a):
     text = a.get("activities","")
     records = []
@@ -301,16 +334,33 @@ def parse_activities(a):
                         "dur":dur,"hr":hr,"cal":cal,"tag":tag})
     return records[:5]
 
-# ── SIMULATED TREND ────────────────────────────────────────────────────────────
+# ── TREND DATA ─────────────────────────────────────────────────────────────────
 random.seed(7)
-today  = datetime.today()
-dates_7 = [(today - timedelta(days=i)).strftime("%m/%d") for i in range(6,-1,-1)]
+today     = datetime.today()
+dates_iso = [(today - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6,-1,-1)]
+dates_7   = [(today - timedelta(days=i)).strftime("%m/%d")    for i in range(6,-1,-1)]
+
+_zoe_has_real  = bool(zoe["source"])
+_zoe_source_lbl = "intervals.icu" if _zoe_has_real else "模擬"
+
+# Zoe load: use real by-day sums when available, fall back to simulation
+_rand_zoe_load  = [random.randint(38, 82) for _ in range(7)]
+_rand_zoe_pace  = [round(random.uniform(6.2, 7.8), 2) for _ in range(7)]
+_rand_r_load    = [random.randint(42, 88) for _ in range(7)]
+_rand_r_pace    = [round(random.uniform(5.8, 7.2), 2) for _ in range(7)]
+
+_zoe_loads = [zoe["by_day"].get(d, _rand_zoe_load[i]) for i, d in enumerate(dates_iso)]
+_zoe_paces = []
+for i, d in enumerate(dates_iso):
+    real_paces = zoe.get("by_day_pace", {}).get(d)
+    _zoe_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_zoe_pace[i])
+
 df_sim = pd.DataFrame({
-    "日期":        dates_7,
-    "Randall 負荷": [random.randint(42,88) for _ in range(7)],
-    "Zoe 負荷":    [random.randint(38,82) for _ in range(7)],
-    "Randall 配速": [round(random.uniform(5.8,7.2),2) for _ in range(7)],
-    "Zoe 配速":    [round(random.uniform(6.2,7.8),2) for _ in range(7)],
+    "日期":         dates_7,
+    "Randall 負荷": _rand_r_load,
+    "Zoe 負荷":     _zoe_loads,
+    "Randall 配速": _rand_r_pace,
+    "Zoe 配速":     _zoe_paces,
 })
 
 r_total   = int(df_sim["Randall 負荷"].sum())
@@ -343,8 +393,10 @@ def chart_base(reverse_y=False):
 # ── LOAD ───────────────────────────────────────────────────────────────────────
 h_raw  = load_json(DATA / "health.json")
 a_raw  = load_json(DATA / "activities.json")
+s_raw  = load_json(DATA / "strava.json")
 health = parse_health(h_raw)
 acts   = parse_activities(a_raw)
+zoe    = parse_intervals(s_raw)
 
 race_date  = datetime(2027, 3, 13)
 days_left  = (race_date - today).days
@@ -831,108 +883,98 @@ with bio_desc_col:
       </div>
     </div>""", unsafe_allow_html=True)
 
-# ── 6b  ZOE · STRAVA ──────────────────────────────────────────────────────────
+# ── 6b  ZOE · INTERVALS.ICU ───────────────────────────────────────────────────
 st.markdown("""
 <div class="sh">
-  <div class="sh-tag">ZOE · STRAVA</div>
-  <div class="sh-title">★ Zoe 的 Strava 串接</div>
-  <div class="sh-sub">授權一次，訓練數據自動更新</div>
+  <div class="sh-tag">ZOE · INTERVALS.ICU</div>
+  <div class="sh-title">★ Zoe 的訓練數據</div>
+  <div class="sh-sub">透過 intervals.icu 自動同步 Strava · 每 6 小時更新</div>
 </div>
 """, unsafe_allow_html=True)
 
-_zoe_token = strava_auth.get_valid_token()
-
-if _zoe_token:
-    _athlete_id  = _zoe_token.get("athlete_id") or "—"
-    _scope       = _zoe_token.get("scope") or "activity:read_all"
-    _updated     = _zoe_token.get("updated_at") or "—"
-    # Fetch recent activity summary
-    try:
-        _acts = strava_auth.fetch_recent_activities(limit=5)
-        _act_count  = len(_acts)
-        _latest_act = _acts[0].get("name","—") if _acts else "—"
-        _latest_km  = round(_acts[0].get("distance", 0) / 1000, 1) if _acts else 0
-        _fetch_err  = None
-    except Exception as _e:
-        _act_count, _latest_act, _latest_km, _fetch_err = 0, "—", 0, str(_e)
-
+if _zoe_has_real:
+    _atl_str = f"{zoe['atl']}" if zoe["atl"] else "—"
+    _ctl_str = f"{zoe['ctl']}" if zoe["ctl"] else "—"
     st.markdown(f"""
     <div class="sc">
       <div class="sc-row">
         <div class="sc-avatar" style="background:var(--z-bg)">★</div>
         <div>
-          <div class="sc-name" style="color:#60A5FA">Zoe · 已連結 Strava</div>
-          <div class="sc-meta">Athlete #{_athlete_id} · Scope: {_scope}</div>
-          <div class="sc-meta" style="margin-top:4px">授權時間：{_updated}</div>
+          <div class="sc-name" style="color:#60A5FA">Zoe · intervals.icu 已串接</div>
+          <div class="sc-meta">資料來源：Strava → intervals.icu · 最後同步 {zoe['updated']}</div>
         </div>
-        <span class="sb sb-ok" style="margin-left:auto">✓ 連結中</span>
+        <span class="sb sb-ok" style="margin-left:auto">✓ 真實數據</span>
       </div>
       <div class="sc-stat-row">
         <div class="sc-stat">
-          <div class="sc-stat-val" style="color:#60A5FA">{_act_count}</div>
-          <div class="sc-stat-lbl">近期活動筆數</div>
+          <div class="sc-stat-val" style="color:#60A5FA">{zoe['count']}</div>
+          <div class="sc-stat-lbl">近 7 天活動</div>
         </div>
         <div class="sc-stat">
-          <div class="sc-stat-val">{_latest_act[:18]}</div>
-          <div class="sc-stat-lbl">最新活動名稱</div>
+          <div class="sc-stat-val" style="color:#60A5FA">{zoe['total_load']}</div>
+          <div class="sc-stat-lbl">7 天總負荷</div>
         </div>
         <div class="sc-stat">
-          <div class="sc-stat-val">{_latest_km} km</div>
-          <div class="sc-stat-lbl">最新距離</div>
+          <div class="sc-stat-val">{zoe['total_km']} km</div>
+          <div class="sc-stat-lbl">7 天總距離</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-val">{_atl_str}</div>
+          <div class="sc-stat-lbl">ATL（7 日負荷）</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-stat-val">{_ctl_str}</div>
+          <div class="sc-stat-lbl">CTL（42 日體能）</div>
         </div>
       </div>
     </div>""", unsafe_allow_html=True)
 
-    if _fetch_err:
-        st.warning(f"API 回傳錯誤：{_fetch_err}")
-
-    _col_sync, _col_revoke, _ = st.columns([1.2, 1, 4])
-    with _col_sync:
-        if st.button("手動同步最新活動", use_container_width=True):
-            with st.spinner("拉取 Strava 資料中…"):
-                try:
-                    _acts_new = strava_auth.fetch_recent_activities(limit=10)
-                    import json as _json
-                    (DATA / "strava.json").write_text(_json.dumps({
-                        "updatedAt": datetime.utcnow().isoformat() + "Z",
-                        "activities": _acts_new,
-                    }, ensure_ascii=False, indent=2))
-                    st.success(f"已同步 {len(_acts_new)} 筆活動")
-                    st.rerun()
-                except Exception as _e:
-                    st.error(f"同步失敗：{_e}")
-    with _col_revoke:
-        if st.button("解除授權", use_container_width=True):
-            strava_auth.revoke_token()
-            st.rerun()
-
+    # Recent activities mini table
+    if zoe["activities"]:
+        with st.expander("★ Zoe 近期活動明細", expanded=False):
+            _rows = ""
+            for _a in zoe["activities"][:6]:
+                _km = f"{_a['distance_km']} km" if _a.get("distance_km") else "—"
+                _hr = f"{_a['avg_hr']} bpm" if _a.get("avg_hr") else "—"
+                _rows += f"""<tr>
+                  <td style="color:#CAC4D0;font-size:12px">{_a['date']}</td>
+                  <td><span style="color:#60A5FA;font-weight:500">{_a['name'][:20]}</span></td>
+                  <td><span style="color:#CAC4D0;font-size:12px">{_a['sport']}</span></td>
+                  <td>{_km}</td>
+                  <td>{_a['avg_pace']}</td>
+                  <td>{_hr}</td>
+                  <td style="color:#60A5FA">{_a['training_load']}</td>
+                </tr>"""
+            st.markdown(f"""
+            <table class="at">
+              <thead><tr>
+                <th>日期</th><th>名稱</th><th>項目</th>
+                <th>距離</th><th>配速</th><th>心率</th><th>負荷</th>
+              </tr></thead>
+              <tbody>{_rows}</tbody>
+            </table>""", unsafe_allow_html=True)
 else:
-    _no_secrets = not strava_auth._client_id()
-    if _no_secrets:
-        st.markdown("""
-        <div class="sc">
-          <div class="sc-row">
-            <div class="sc-avatar" style="background:rgba(239,154,154,0.12)">⚠️</div>
-            <div>
-              <div class="sc-name">尚未設定 Strava API 憑證</div>
-              <div class="sc-meta">請在 Streamlit Secrets 加入 strava_client_id / strava_client_secret / strava_redirect_uri</div>
-            </div>
-          </div>
-        </div>""", unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <div class="sc">
-          <div class="sc-row">
-            <div class="sc-avatar" style="background:var(--z-bg)">★</div>
-            <div>
-              <div class="sc-name">Zoe 尚未連結 Strava</div>
-              <div class="sc-meta">點擊授權後，訓練數據將自動取代模擬資料</div>
-            </div>
-            <span class="sb sb-med" style="margin-left:auto">⚠ 模擬中</span>
-          </div>
-        </div>""", unsafe_allow_html=True)
-        st.link_button("★ 連結 Zoe 的 Strava", strava_auth.auth_url(),
-                        use_container_width=False)
+    st.markdown("""
+    <div class="sc">
+      <div class="sc-row">
+        <div class="sc-avatar" style="background:var(--z-bg)">★</div>
+        <div>
+          <div class="sc-name">Zoe 的 intervals.icu 尚未設定</div>
+          <div class="sc-meta">完成以下步驟後，Zoe 的訓練數據將自動取代模擬資料</div>
+        </div>
+        <span class="sb sb-med" style="margin-left:auto">⚠ 模擬中</span>
+      </div>
+    </div>""", unsafe_allow_html=True)
+    st.markdown("""
+    **設定步驟（Zoe 操作一次）**
+
+    1. 去 [intervals.icu](https://intervals.icu) 建立免費帳號，連結 Strava
+    2. 開 Settings → API Key，複製 Athlete ID 和 API Key
+    3. 把以下兩個 secret 加進 GitHub repo Settings → Secrets：
+       - `INTERVALS_ATHLETE_ID` = `i123456`（你的 ID）
+       - `INTERVALS_API_KEY` = 複製的 API Key
+    4. 在 GitHub Actions 手動觸發 **Sync intervals.icu (Zoe)** 一次
+    """, unsafe_allow_html=False)
 
 # ── 7  TRAINING LOG ────────────────────────────────────────────────────────────
 with st.expander("📋 Show Full Training Log — Randall · COROS", expanded=False):
