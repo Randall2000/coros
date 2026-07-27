@@ -136,6 +136,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: var(--md-sys-color-surface-container);
   border-radius: 12px;
   border: 1px solid var(--md-sys-color-outline-variant);
+  border-top-width: 2px;
   padding: 16px 20px 14px;
   position: relative;
   overflow: hidden;
@@ -214,7 +215,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: var(--md-sys-color-surface-container);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: 12px;
-  padding: 20px 20px 6px;
+  padding: 20px 16px 8px;
 }
 .chart-title {
   font-size: 14px; font-weight: 500;
@@ -226,19 +227,39 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 10px;
 }
+.sim-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+  padding: 2px 6px; border-radius: 4px;
+  background: rgba(255,224,130,0.12); color: #FFE082;
+  margin-left: 8px; vertical-align: middle;
+}
 
 /* ── Divider card ── */
 .divider-card {
   background: var(--md-sys-color-surface-container);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: 12px;
-  padding: 16px 20px;
-  display: flex; align-items: center; gap: 16px;
-  min-height: 76px;
+  padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 12px;
+  min-height: 100px;
 }
 .divider-icon {
   width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
+}
+.divider-row {
+  display: flex; align-items: center; gap: 16px;
+}
+/* M3 linear progress bar */
+.md-progress-track {
+  height: 4px; border-radius: 2px;
+  background: rgba(202,196,208,0.12);
+  overflow: hidden;
+}
+.md-progress-fill {
+  height: 100%; border-radius: 2px;
+  transition: width 0.4s ease;
 }
 
 /* ── Streamlit overrides ── */
@@ -352,21 +373,34 @@ df_sim = pd.DataFrame({
     "隊友配速": [round(random.uniform(6.2,7.8),2) for _ in range(7)],
 })
 
-def chart_base(reverse_y=False):
+def chart_base(reverse_y=False, ytitle=""):
     base = dict(
         plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         font=dict(family="Roboto,system-ui", color="#CAC4D0", size=11),
-        xaxis=dict(showgrid=False, zeroline=False,
-                   tickfont=dict(color="rgba(202,196,208,0.5)", size=10),
-                   linecolor="rgba(202,196,208,0.1)"),
-        yaxis=dict(showgrid=True, gridcolor="rgba(202,196,208,0.08)", zeroline=False,
-                   tickfont=dict(color="rgba(202,196,208,0.5)", size=10)),
-        legend=dict(orientation="h", yanchor="bottom", y=1.06, xanchor="right", x=1,
-                    font=dict(size=11, color="#CAC4D0"), bgcolor="rgba(0,0,0,0)"),
-        margin=dict(l=0, r=0, t=8, b=0),
+        xaxis=dict(
+            showgrid=False, zeroline=False,
+            tickfont=dict(color="rgba(202,196,208,0.55)", size=11),
+            linecolor="rgba(202,196,208,0.1)",
+            tickangle=0,
+        ),
+        yaxis=dict(
+            showgrid=True, gridcolor="rgba(202,196,208,0.07)", zeroline=False,
+            tickfont=dict(color="rgba(202,196,208,0.55)", size=11),
+            title=dict(text=ytitle, font=dict(size=11, color="rgba(202,196,208,0.5)")),
+            ticksuffix="  ",
+        ),
+        legend=dict(
+            orientation="h", yanchor="bottom", y=1.04, xanchor="right", x=1,
+            font=dict(size=11, color="#CAC4D0"), bgcolor="rgba(0,0,0,0)",
+            itemgap=12,
+        ),
+        margin=dict(l=8, r=8, t=36, b=8),
         hovermode="x unified",
-        hoverlabel=dict(bgcolor="#2B2930", bordercolor="rgba(202,196,208,0.2)",
-                        font=dict(color="#E6E1E5", size=12)),
+        hoverlabel=dict(
+            bgcolor="#2B2930", bordercolor="rgba(202,196,208,0.2)",
+            font=dict(color="#E6E1E5", size=12),
+            namelength=-1,
+        ),
     )
     if reverse_y: base["yaxis"]["autorange"] = "reversed"
     return base
@@ -448,7 +482,7 @@ cols = st.columns(4)
 for (key, label, color, iconbg, val, cls, badge, ctx), col in zip(TILES, cols):
     with col:
         st.markdown(f"""
-        <div class="metric-tile">
+        <div class="metric-tile" style="border-top-color:{color}">
           <div class="metric-tile-top">
             <span class="metric-category">{label}</span>
             <div class="metric-icon" style="background:{iconbg};color:{color}">{ICON_SVG[key]}</div>
@@ -493,7 +527,7 @@ else:
     </div>""", unsafe_allow_html=True)
 
 # ── Charts ────────────────────────────────────────────────────────────────────
-st.markdown('<div class="sec-header"><span class="sec-title">訓練趨勢</span><span class="sec-sub">近 7 天 · 隊友數據為 Strava 模擬（待串接）</span></div>', unsafe_allow_html=True)
+st.markdown('<div class="sec-header"><span class="sec-title">訓練趨勢</span><span class="sec-sub">近 7 天<span class="sim-badge">⚠ 模擬資料</span></span></div>', unsafe_allow_html=True)
 
 cl, cr = st.columns(2)
 
@@ -501,34 +535,36 @@ with cl:
     st.markdown('<div class="chart-card"><div class="chart-title">訓練負荷</div><div class="chart-sub">Training Load · COROS vs Strava</div>', unsafe_allow_html=True)
     fig = go.Figure()
     for name, col, color, fill in [
-        ("我 (COROS)",   "我的負荷","#D0BCFF","rgba(208,188,255,0.09)"),
-        ("隊友 (Strava)","隊友負荷","#80CBC4","rgba(128,203,196,0.07)"),
+        ("我 (COROS)",   "我的負荷","#D0BCFF","rgba(208,188,255,0.10)"),
+        ("隊友 (Strava)","隊友負荷","#80CBC4","rgba(128,203,196,0.08)"),
     ]:
         fig.add_trace(go.Scatter(
             x=df_sim["日期"], y=df_sim[col], name=name, mode="lines+markers",
-            line=dict(color=color, width=2, shape="spline", smoothing=0.5),
-            marker=dict(size=5, color=color, line=dict(width=1.5, color="#211F26")),
+            line=dict(color=color, width=2.5, shape="spline", smoothing=0.6),
+            marker=dict(size=6, color=color, line=dict(width=1.5, color="#211F26")),
             fill="tozeroy", fillcolor=fill,
+            hovertemplate="%{y}",
         ))
-    fig.update_layout(**chart_base())
-    st.plotly_chart(fig, use_container_width=True)
+    fig.update_layout(**chart_base(ytitle="負荷"), height=220)
+    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
 
 with cr:
     st.markdown('<div class="chart-card"><div class="chart-title">Zone 2 配速</div><div class="chart-sub">min/km · 數值越小代表越快</div>', unsafe_allow_html=True)
     fig2 = go.Figure()
     for name, col, color, fill in [
-        ("我 (COROS)",   "我的配速","#EFB8C8","rgba(239,184,200,0.09)"),
-        ("隊友 (Strava)","隊友配速","#FFE082","rgba(255,224,130,0.07)"),
+        ("我 (COROS)",   "我的配速","#EFB8C8","rgba(239,184,200,0.10)"),
+        ("隊友 (Strava)","隊友配速","#FFE082","rgba(255,224,130,0.08)"),
     ]:
         fig2.add_trace(go.Scatter(
             x=df_sim["日期"], y=df_sim[col], name=name, mode="lines+markers",
-            line=dict(color=color, width=2, shape="spline", smoothing=0.5),
-            marker=dict(size=5, color=color, line=dict(width=1.5, color="#211F26")),
+            line=dict(color=color, width=2.5, shape="spline", smoothing=0.6),
+            marker=dict(size=6, color=color, line=dict(width=1.5, color="#211F26")),
             fill="tozeroy", fillcolor=fill,
+            hovertemplate="%{y} min/km",
         ))
-    fig2.update_layout(**chart_base(reverse_y=True))
-    st.plotly_chart(fig2, use_container_width=True)
+    fig2.update_layout(**chart_base(reverse_y=True, ytitle="min/km"), height=220)
+    st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar": False})
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ── Equipment goals ───────────────────────────────────────────────────────────
@@ -538,32 +574,45 @@ g1, g2 = st.columns(2)
 with g1:
     st.markdown("""
     <div class="divider-card">
-      <div class="divider-icon" style="background:rgba(128,203,196,0.12);color:#80CBC4">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="8" rx="2"/><line x1="6" y1="8" x2="6" y2="4"/><line x1="18" y1="8" x2="18" y2="4"/><line x1="6" y1="16" x2="6" y2="20"/><line x1="18" y1="16" x2="18" y2="20"/></svg>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;color:#CAC4D0">Sled Push</div>
-        <div style="font-size:24px;font-weight:400;font-family:'Roboto Mono',monospace;color:#E6E1E5;margin:2px 0">102 kg</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="state-badge state-ok">✓ 達標</span>
-          <span style="font-size:11px;color:#CAC4D0">女子雙人標準</span>
+      <div class="divider-row">
+        <div class="divider-icon" style="background:rgba(128,203,196,0.12);color:#80CBC4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="8" rx="2"/><line x1="6" y1="8" x2="6" y2="4"/><line x1="18" y1="8" x2="18" y2="4"/><line x1="6" y1="16" x2="6" y2="20"/><line x1="18" y1="16" x2="18" y2="20"/></svg>
         </div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;color:#CAC4D0">Sled Push</div>
+          <div style="font-size:28px;font-weight:400;font-family:'Roboto Mono',monospace;color:#E6E1E5;margin:2px 0;line-height:1">102 kg</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span class="state-badge state-ok">✓ 達標</span>
+            <span style="font-size:11px;color:#CAC4D0">女子雙人標準</span>
+          </div>
+        </div>
+      </div>
+      <div class="md-progress-track">
+        <div class="md-progress-fill" style="width:100%;background:#4DB6AC"></div>
       </div>
     </div>""", unsafe_allow_html=True)
 
 with g2:
-    st.markdown("""
+    wb_current, wb_target = 58, 75
+    wb_pct = round(wb_current / wb_target * 100)
+    wb_gap = wb_target - wb_current
+    st.markdown(f"""
     <div class="divider-card">
-      <div class="divider-icon" style="background:rgba(239,154,154,0.12);color:#EF9A9A">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;color:#CAC4D0">Wall Balls · 4 kg</div>
-        <div style="font-size:24px;font-weight:400;font-family:'Roboto Mono',monospace;color:#E6E1E5;margin:2px 0">58 / 75</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="state-badge state-bad">✗ 差 17 下</span>
-          <span style="font-size:11px;color:#CAC4D0">目標 75 下</span>
+      <div class="divider-row">
+        <div class="divider-icon" style="background:rgba(239,154,154,0.12);color:#EF9A9A">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         </div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;color:#CAC4D0">Wall Balls · 4 kg</div>
+          <div style="font-size:28px;font-weight:400;font-family:'Roboto Mono',monospace;color:#E6E1E5;margin:2px 0;line-height:1">{wb_current} <span style="font-size:16px;color:#CAC4D0">/ {wb_target}</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span class="state-badge state-bad">差 {wb_gap} 下</span>
+            <span style="font-size:11px;color:#CAC4D0">{wb_pct}% 達標</span>
+          </div>
+        </div>
+      </div>
+      <div class="md-progress-track">
+        <div class="md-progress-fill" style="width:{wb_pct}%;background:#EF9A9A"></div>
       </div>
     </div>""", unsafe_allow_html=True)
 
