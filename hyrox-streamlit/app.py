@@ -282,7 +282,7 @@ def parse_intervals(s: dict) -> dict:
              "total_load": 0, "avg_pace": "—", "avg_pace_float": None,
              "total_km": 0, "atl": None, "ctl": None, "count": 0,
              "by_day": {}}
-    if not s or s.get("source") != "intervals.icu":
+    if not s or s.get("source") not in ("intervals.icu", "strava"):
         return empty
     summ = s.get("summary_7d", {})
     acts = s.get("activities_7d", [])
@@ -888,7 +888,7 @@ st.markdown("""
 <div class="sh">
   <div class="sh-tag">ZOE · INTERVALS.ICU</div>
   <div class="sh-title">★ Zoe 的訓練數據</div>
-  <div class="sh-sub">透過 intervals.icu 自動同步 Strava · 每 6 小時更新</div>
+  <div class="sh-sub">Strava 自動同步 · 每 6 小時更新</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -901,7 +901,7 @@ if _zoe_has_real:
         <div class="sc-avatar" style="background:var(--z-bg)">★</div>
         <div>
           <div class="sc-name" style="color:#60A5FA">Zoe · intervals.icu 已串接</div>
-          <div class="sc-meta">資料來源：Strava → intervals.icu · 最後同步 {zoe['updated']}</div>
+          <div class="sc-meta">資料來源：Strava API · 最後同步 {zoe['updated']}</div>
         </div>
         <span class="sb sb-ok" style="margin-left:auto">✓ 真實數據</span>
       </div>
