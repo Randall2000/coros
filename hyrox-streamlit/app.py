@@ -88,10 +88,13 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .bb-wrap { margin: 0 0 18px; }
 .bb-track { height: 18px; border-radius: 9px; overflow: hidden; position: relative; }
 .bb-r { position: absolute; left: 0; top: 0; bottom: 0;
-  background: linear-gradient(90deg, rgba(88,166,255,0.55) 0%, #58A6FF 100%);
+  background: linear-gradient(90deg, rgba(88,166,255,0.5) 0%, #58A6FF 100%);
   border-radius: 9px 0 0 9px; }
+.bb-z { position: absolute; right: 0; top: 0; bottom: 0;
+  background: linear-gradient(270deg, rgba(227,179,65,0.5) 0%, #E3B341 100%);
+  border-radius: 0 9px 9px 0; }
 .bb-mid-line { position: absolute; top: 0; bottom: 0; width: 2px;
-  background: rgba(28,27,31,0.7); left: calc(50% - 1px); }
+  background: rgba(13,17,23,0.85); left: calc(50% - 1px); }
 .bb-labels { display: flex; justify-content: space-between; align-items: center;
   margin-top: 7px; font-size: 11px; }
 /* Pace visual bars */
@@ -503,7 +506,7 @@ st.markdown("""
 <div class="sh">
   <div class="sh-tag">WAR ROOM</div>
   <div class="sh-title">⚡ 本週戰況排名</div>
-  <div class="sh-sub">每週日自動歸零 · Zoe 數據為 Strava 模擬（待串接）</div>
+  <div class="sh-sub">每週日自動歸零 · Zoe 每日手動輸入</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -544,15 +547,16 @@ st.markdown(f"""
       <div class="ws-lead-pts" style="color:{lp_color}">{lp_pts_str}</div>
     </div>
     <div class="ws-player ws-player-z">
-      <div class="ws-name ws-name-z">★ ZOE · STRAVA</div>
+      <div class="ws-name ws-name-z">★ ZOE · 手動輸入</div>
       <div class="ws-score">{z_total}<span class="ws-unit"> pts</span></div>
       <div class="ws-pct" style="color:#E3B341">{z_pct}% 本週份額</div>
     </div>
   </div>
   <!-- Tug-of-war battle bar -->
   <div class="bb-wrap">
-    <div class="bb-track" style="background:rgba(227,179,65,0.22)">
+    <div class="bb-track" style="background:rgba(48,54,61,0.5)">
       <div class="bb-r" style="width:{r_pct}%"></div>
+      <div class="bb-z" style="width:{z_pct}%"></div>
       <div class="bb-mid-line"></div>
     </div>
     <div class="bb-labels">
