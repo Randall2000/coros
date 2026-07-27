@@ -2,7 +2,9 @@ import re, sqlite3, json, base64
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+_TZ_TAIPEI = timezone(timedelta(hours=8))
 from pathlib import Path
 import random
 import urllib.request
@@ -459,6 +461,8 @@ def parse_health(h):
     if ts := h.get("updatedAt",""):
         try:
             dt = datetime.fromisoformat(ts.replace("Z","+00:00"))
+            if dt.tzinfo:
+                dt = dt.astimezone(_TZ_TAIPEI)
             d["updated"] = dt.strftime("%m/%d %H:%M")
         except: pass
     return d
