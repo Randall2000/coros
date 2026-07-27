@@ -1,4 +1,4 @@
 {
-  "updatedAt": "2026-07-27T02:16:22.557Z",
+  "updatedAt": "2026-07-27T02:41:22.256Z",
   "activities": "Sport Records — 2026-06-27 to 2026-07-27 (4 records)\n========================\n\n1. Custom Indoor Other — 2026-07-26\n   Location: 拉槓\n   Time Window: startTimestamp=1785076708 | endTimestamp=1785076782\n   Duration: 1:02\n | Avg HR: 97 bpm | Calories: 4 kcal\n   LabelId: 479177902454243728 | SportType: 9904\n\n2. Strength — 2026-07-26\n   Location: 肌力訓練\n   Time Window: startTimestamp=1785051304 | endTimestamp=1785053537\n   Duration: 28:52 | Sets: 24\n | Avg HR: 73 bpm | Calories: 98 kcal\n   LabelId: 479171860238467172 | SportType: 402\n\n3. Strength — 2026-07-26\n   Location: 肌力訓練\n   Time Window: startTimestamp=1784998138 | endTimestamp=1784998330\n   Duration: 3:05 | Sets: 4\n | Avg HR: 86 bpm | Calories: 16 kcal\n   LabelId: 479156850403606731 | SportType: 402\n\n4. Strength — 2026-07-26\n   Location: 肌力訓練\n   Time Window: startTimestamp=1784997905 | endTimestamp=1784998029\n   Duration: 1:43 | Sets: 3\n | Avg HR: 83 bpm | Calories: 8 kcal\n   LabelId: 479156765307469928 | SportType: 402"
 }
