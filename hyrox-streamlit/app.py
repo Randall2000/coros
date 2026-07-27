@@ -529,9 +529,11 @@ def parse_activities(a):
 h_raw  = load_json(DATA / "health.json")
 a_raw  = load_json(DATA / "activities.json")
 s_raw  = load_json(DATA / "strava.json")
+r_raw  = load_json(DATA / "randall_runs.json")
 health = parse_health(h_raw)
 acts   = parse_activities(a_raw)
 zoe    = parse_intervals(s_raw)
+randall_runs = parse_intervals(r_raw)
 
 # ── TREND DATA ─────────────────────────────────────────────────────────────────
 random.seed(7)
@@ -545,10 +547,10 @@ _zoe_source_lbl = ("手動輸入" if _zoe_is_manual
                    else "intervals.icu" if _zoe_has_real
                    else "模擬")
 
-# Zoe load: use real by-day sums when available, fall back to simulation
+# Fallback random data (only used for days with no real records)
 _rand_zoe_load  = [random.randint(38, 82) for _ in range(7)]
 _rand_zoe_pace  = [round(random.uniform(6.2, 7.8), 2) for _ in range(7)]
-_rand_r_load    = [random.randint(42, 88) for _ in range(7)]
+_rand_r_load    = [0] * 7   # default 0 (no run) rather than fake random
 _rand_r_pace    = [round(random.uniform(5.8, 7.2), 2) for _ in range(7)]
 
 _zoe_loads = [zoe["by_day"].get(d, _rand_zoe_load[i]) for i, d in enumerate(dates_iso)]
@@ -557,11 +559,18 @@ for i, d in enumerate(dates_iso):
     real_paces = zoe.get("by_day_pace", {}).get(d)
     _zoe_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_zoe_pace[i])
 
+# Randall load: use real run data when available, else 0 (no run that day)
+_r_loads = [randall_runs["by_day"].get(d, _rand_r_load[i]) for i, d in enumerate(dates_iso)]
+_r_paces = []
+for i, d in enumerate(dates_iso):
+    real_paces = randall_runs.get("by_day_pace", {}).get(d)
+    _r_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_r_pace[i])
+
 df_sim = pd.DataFrame({
     "日期":         dates_7,
-    "Randall 負荷": _rand_r_load,
+    "Randall 負荷": _r_loads,
     "Zoe 負荷":     _zoe_loads,
-    "Randall 配速": _rand_r_pace,
+    "Randall 配速": _r_paces,
     "Zoe 配速":     _zoe_paces,
 })
 

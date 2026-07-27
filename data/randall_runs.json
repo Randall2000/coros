@@ -1,0 +1,33 @@
+{
+  "source": "manual",
+  "updatedAt": "2026-07-27T17:30:00",
+  "activities_7d": [
+    {
+      "date": "2026-07-21",
+      "name": "跑步",
+      "sport": "Run",
+      "training_load": 38,
+      "distance_km": 5.0,
+      "avg_pace": "6:24",
+      "avg_pace_float": 6.4,
+      "avg_hr": null
+    },
+    {
+      "date": "2026-07-08",
+      "name": "跑步",
+      "sport": "Run",
+      "training_load": 45,
+      "distance_km": 6.0,
+      "avg_pace": "6:24",
+      "avg_pace_float": 6.4,
+      "avg_hr": null
+    }
+  ],
+  "summary_7d": {
+    "total_load": 38,
+    "total_distance_km": 5.0,
+    "avg_pace": "6:24",
+    "avg_pace_float": 6.4,
+    "activity_count": 1
+  }
+}
