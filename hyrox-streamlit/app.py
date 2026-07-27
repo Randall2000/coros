@@ -706,23 +706,9 @@ st.markdown(f"""
       <div class="ws-pct" style="color:#E3B341">{z_pct}% 本週份額</div>
     </div>
   </div>
-  <!-- Scoring formula breakdown -->
-  <div style="background:rgba(22,27,34,0.6);border:1px solid rgba(48,54,61,0.6);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#8B949E;line-height:1.8">
-    <div style="color:#C9D1D9;font-weight:600;margin-bottom:6px">📐 積分公式（HYROX 權重）</div>
-    <div style="display:flex;gap:24px;flex-wrap:wrap">
-      <div>
-        <span style="color:#58A6FF;font-weight:600">⚡ Randall</span><br>
-        跑步 {_r_run_raw} TL × {_HX_RUN} = {_r_run_hx}<br>
-        肌力 {_r_str_tl} TL × {_HX_STR} = {_r_str_hx}<br>
-        <span style="color:#58A6FF">合計 {r_total} pts</span>
-      </div>
-      <div>
-        <span style="color:#E3B341;font-weight:600">★ Zoe</span><br>
-        跑步 {_z_run_raw} TL × {_HX_RUN} = {_z_run_hx}<br>
-        肌力 — (無資料)<br>
-        <span style="color:#E3B341">合計 {z_total} pts</span>
-      </div>
-    </div>
+  <!-- Scoring formula -->
+  <div style="background:rgba(22,27,34,0.6);border:1px solid rgba(48,54,61,0.6);border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:12px;color:#8B949E">
+    📐 積分公式：跑步 TL × 1.5 ＋ 肌力 TL × 1.2
   </div>
   <!-- Tug-of-war battle bar -->
   <div class="bb-wrap">
