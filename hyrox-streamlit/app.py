@@ -373,7 +373,7 @@ df_sim = pd.DataFrame({
     "隊友配速": [round(random.uniform(6.2,7.8),2) for _ in range(7)],
 })
 
-def chart_base(reverse_y=False, ytitle=""):
+def chart_base(reverse_y=False):
     base = dict(
         plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
         font=dict(family="Roboto,system-ui", color="#CAC4D0", size=11),
@@ -381,13 +381,10 @@ def chart_base(reverse_y=False, ytitle=""):
             showgrid=False, zeroline=False,
             tickfont=dict(color="rgba(202,196,208,0.55)", size=11),
             linecolor="rgba(202,196,208,0.1)",
-            tickangle=0,
         ),
         yaxis=dict(
             showgrid=True, gridcolor="rgba(202,196,208,0.07)", zeroline=False,
             tickfont=dict(color="rgba(202,196,208,0.55)", size=11),
-            title=dict(text=ytitle, font=dict(size=11, color="rgba(202,196,208,0.5)")),
-            ticksuffix="  ",
         ),
         legend=dict(
             orientation="h", yanchor="bottom", y=1.04, xanchor="right", x=1,
@@ -545,8 +542,8 @@ with cl:
             fill="tozeroy", fillcolor=fill,
             hovertemplate="%{y}",
         ))
-    fig.update_layout(**chart_base(ytitle="負荷"), height=220)
-    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    fig.update_layout(**chart_base(), height=220)
+    st.plotly_chart(fig, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 with cr:
@@ -563,8 +560,8 @@ with cr:
             fill="tozeroy", fillcolor=fill,
             hovertemplate="%{y} min/km",
         ))
-    fig2.update_layout(**chart_base(reverse_y=True, ytitle="min/km"), height=220)
-    st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar": False})
+    fig2.update_layout(**chart_base(reverse_y=True), height=220)
+    st.plotly_chart(fig2, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ── Equipment goals ───────────────────────────────────────────────────────────
