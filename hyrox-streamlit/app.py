@@ -62,7 +62,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 
 /* SECTION HEADER */
 .sh { margin: 28px 0 14px; }
-.sh-tag { font-size: 10px; font-weight: 500; letter-spacing: 1.5px;
+.sh-tag { font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
   text-transform: uppercase; color: var(--on-v); margin-bottom: 3px; }
 .sh-title { font-size: 20px; font-weight: 400; color: var(--on); margin: 0; }
 .sh-sub { font-size: 12px; color: var(--on-v); margin-top: 2px; }
@@ -74,7 +74,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .wr-scores { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
 .ws-player { flex: 1; }
 .ws-player-z { text-align: right; }
-.ws-name { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.ws-name { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
 .ws-name-r { color: var(--r); }
 .ws-name-z { color: var(--z); }
 .ws-score { font-family: 'Roboto Mono', monospace;
@@ -83,7 +83,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .ws-pct { font-size: 12px; font-weight: 500; margin-top: 5px; }
 .ws-mid { text-align: center; padding-bottom: 6px; flex-shrink: 0; }
 .ws-lead-pts { font-family: 'Roboto Mono', monospace; font-size: 26px; font-weight: 400; line-height: 1; }
-.ws-lead-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; color: var(--on-v); margin-top: 3px; }
+.ws-lead-lbl { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; color: var(--on-v); margin-top: 3px; }
 /* Battle (tug-of-war) bar */
 .bb-wrap { margin: 0 0 18px; }
 .bb-track { height: 18px; border-radius: 9px; overflow: hidden; position: relative; }
@@ -96,22 +96,22 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .bb-mid-line { position: absolute; top: 0; bottom: 0; width: 2px;
   background: rgba(13,17,23,0.85); left: calc(50% - 1px); }
 .bb-labels { display: flex; justify-content: space-between; align-items: center;
-  margin-top: 7px; font-size: 11px; }
+  margin-top: 7px; font-size: 12px; }
 /* Pace visual bars */
 .pv { background: var(--s-hi); border: 1px solid var(--out-v);
   border-radius: 10px; padding: 14px 18px; }
-.pv-title { font-size: 10px; font-weight: 500; letter-spacing: 0.8px;
+.pv-title { font-size: 11px; font-weight: 500; letter-spacing: 0.8px;
   text-transform: uppercase; color: var(--on-v); margin-bottom: 12px; }
 .pv-row { display: flex; align-items: center; gap: 10px; }
 .pv-row + .pv-row { margin-top: 10px; }
-.pv-name { font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+.pv-name { font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
   text-transform: uppercase; width: 76px; flex-shrink: 0; }
 .pv-track { flex: 1; height: 8px; border-radius: 4px;
   background: rgba(48,54,61,0.4); overflow: hidden; }
 .pv-fill { height: 100%; border-radius: 4px; }
 .pv-val { font-family: 'Roboto Mono', monospace; font-size: 13px; width: 58px;
   text-align: right; flex-shrink: 0; }
-.dl { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+.dl { font-size: 12px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
 .dl-r { background: var(--r-bg); color: var(--r); }
 .dl-z { background: var(--z-bg); color: var(--z); }
 .dl-n { background: rgba(48,54,61,0.4); color: var(--on-v); }
@@ -120,12 +120,12 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .cc { background: var(--surf); border: 1px solid var(--out-v);
   border-radius: 12px; padding: 16px 16px 6px; }
 .cc-title { font-size: 14px; font-weight: 500; color: var(--on); margin-bottom: 2px; }
-.cc-sub { font-size: 11px; color: var(--on-v); margin-bottom: 8px; }
+.cc-sub { font-size: 12px; color: var(--on-v); margin-bottom: 8px; }
 .cc-stats { display: flex; padding-top: 6px; border-top: 1px solid var(--out-v); }
 .cc-stat { flex: 1; padding: 8px 12px; border-right: 1px solid var(--out-v); }
 .cc-stat:last-child { border-right: none; }
 .cc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 17px; color: var(--on); line-height: 1; }
-.cc-stat-lbl { font-size: 10px; color: var(--on-v); margin-top: 2px; }
+.cc-stat-lbl { font-size: 11px; color: var(--on-v); margin-top: 2px; }
 
 /* EQUIPMENT CARD */
 .eq { background: var(--surf); border: 1px solid var(--out-v);
@@ -134,7 +134,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .eq-row { display: flex; align-items: center; gap: 14px; }
 .eq-ico { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center; font-size: 18px; }
-.eq-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+.eq-lbl { font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
   text-transform: uppercase; color: var(--on-v); }
 .eq-val { font-family: 'Roboto Mono', monospace;
   font-size: 26px; font-weight: 400; color: var(--on); line-height: 1; }
@@ -144,16 +144,16 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .gap-row { display: flex; gap: 8px; }
 .gap-item { flex: 1; padding: 10px 14px; border-radius: 8px;
   background: var(--s-hi); border: 1px solid var(--out-v); }
-.gap-who { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+.gap-who { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
 .gap-val { font-family: 'Roboto Mono', monospace; font-size: 17px; color: var(--on); line-height: 1.3; }
-.gap-sub { font-size: 10px; color: var(--on-v); }
+.gap-sub { font-size: 11px; color: var(--on-v); }
 
 /* BIO METRIC TILE */
 .mt { background: var(--surf); border-radius: 10px;
   border: 1px solid var(--out-v); border-top: 2px solid;
   padding: 10px 14px 8px; display: flex; flex-direction: column; gap: 5px; }
 .mt-top { display: flex; align-items: center; justify-content: space-between; }
-.mt-cat { font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+.mt-cat { font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
   text-transform: uppercase; color: var(--on-v); }
 .mt-ico { width: 24px; height: 24px; border-radius: 6px;
   display: flex; align-items: center; justify-content: center; }
@@ -161,16 +161,16 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   font-size: 24px; font-weight: 400; color: var(--on);
   letter-spacing: -0.5px; line-height: 1; }
 .mt-foot { display: flex; align-items: center; gap: 6px; }
-.sb { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; padding: 1px 6px; border-radius: 3px; }
+.sb { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; }
 .sb-ok   { background: rgba(227,179,65,0.14);  color: #E3B341; }
 .sb-med  { background: rgba(227,179,65,0.14);   color: #E3B341; }
 .sb-bad  { background: rgba(248,81,73,0.14);  color: #F85149; }
 .sb-info { background: rgba(121,192,255,0.14);  color: #79C0FF; }
-.mt-ctx { font-size: 10px; color: var(--on-v); opacity: 0.7; }
+.mt-ctx { font-size: 11px; color: var(--on-v); opacity: 0.7; }
 
 /* ACTIVITY TABLE */
 .at { width: 100%; border-collapse: collapse; }
-.at th { font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+.at th { font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
   text-transform: uppercase; color: var(--on-v);
   padding: 0 14px 10px; text-align: left; border-bottom: 1px solid var(--out-v); }
 .at th:first-child { padding-left: 18px; }
@@ -179,14 +179,14 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .at td:first-child { padding-left: 18px; }
 .at tr:last-child td { border-bottom: none; }
 .al { display: inline-flex; align-items: center;
-  font-size: 10px; font-weight: 500; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; }
+  font-size: 11px; font-weight: 500; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; }
 .al-s { background: rgba(88,166,255,0.12); color: #58A6FF; }
 .al-r { background: rgba(227,179,65,0.12); color: #E3B341; }
 .al-o { background: rgba(48,54,61,0.5); color: #8B949E; }
 
 /* SIM BADGE */
 .sim { display: inline-flex; align-items: center;
-  font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
+  font-size: 11px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
   background: rgba(227,179,65,0.12); color: #E3B341; margin-left: 8px; }
 
 /* STRAVA CONNECT */
@@ -203,7 +203,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .sc-stat { flex: 1; padding: 10px 14px; border-right: 1px solid var(--out-v); }
 .sc-stat:last-child { border-right: none; }
 .sc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 16px; color: var(--on); }
-.sc-stat-lbl { font-size: 10px; color: var(--on-v); margin-top: 1px; }
+.sc-stat-lbl { font-size: 11px; color: var(--on-v); margin-top: 1px; }
 
 /* Streamlit overrides */
 [data-testid="stExpander"] { background: var(--surf) !important;
@@ -220,25 +220,77 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 8px !important; }
   [data-testid="column"] { min-width: 100% !important; flex: 1 1 100% !important; }
 
-  /* Card padding reduction */
-  .wr  { padding: 14px 14px 12px; border-radius: 12px; }
-  .sc  { padding: 14px 14px; border-radius: 10px; }
-  .cc  { padding: 12px 12px 4px; }
-  .eq  { padding: 12px 14px; gap: 10px; }
-  .mt  { padding: 10px 10px 8px; }
+  /* Page header */
+  .ph-title  { font-size: 18px; }
+  .chip      { font-size: 13px; height: 30px; padding: 0 12px; }
+  .sync-lbl  { font-size: 12px; }
 
-  /* Score sizes */
-  .ws-score    { font-size: 38px !important; letter-spacing: -1px; }
-  .ws-lead-pts { font-size: 20px !important; }
+  /* Section header */
+  .sh       { margin: 22px 0 12px; }
+  .sh-tag   { font-size: 12px; }
+  .sh-title { font-size: 20px; }
+  .sh-sub   { font-size: 13px; }
 
-  /* Pace bar */
-  .pv-name { width: 56px; }
-  .pv-val  { width: 48px; font-size: 12px; }
+  /* Card padding */
+  .wr { padding: 16px 16px 14px; border-radius: 14px; }
+  .sc { padding: 16px 16px; border-radius: 12px; }
+  .cc { padding: 14px 14px 6px; }
+  .eq { padding: 14px 16px; gap: 12px; }
+  .mt { padding: 12px 12px 10px; }
 
-  /* Stats wrap to 2×2 */
-  .sc-stat-row  { flex-wrap: wrap; }
-  .sc-stat      { min-width: 50%; }
-  .sc-stat-val  { font-size: 15px; }
+  /* Score card - player names */
+  .ws-name    { font-size: 12px; letter-spacing: 0.8px; }
+  .ws-score   { font-size: 36px !important; letter-spacing: -1px; }
+  .ws-unit    { font-size: 14px; }
+  .ws-pct     { font-size: 13px; }
+  .ws-lead-pts { font-size: 22px !important; }
+  .ws-lead-lbl { font-size: 12px; }
+
+  /* Battle bar labels */
+  .bb-labels  { font-size: 13px; margin-top: 8px; }
+  .bb-track   { height: 20px; border-radius: 10px; }
+
+  /* Pace section */
+  .pv         { padding: 14px 16px; }
+  .pv-title   { font-size: 12px; margin-bottom: 14px; }
+  .pv-row     { gap: 10px; }
+  .pv-row + .pv-row { margin-top: 12px; }
+  .pv-name    { font-size: 12px; width: 72px; }
+  .pv-track   { height: 10px; border-radius: 5px; }
+  .pv-val     { font-size: 15px; width: 52px; }
+  .dl         { font-size: 12px; padding: 3px 8px; }
+
+  /* Chart card */
+  .cc-title   { font-size: 15px; }
+  .cc-sub     { font-size: 13px; margin-bottom: 10px; }
+  .cc-stat-val { font-size: 16px; }
+  .cc-stat-lbl { font-size: 12px; }
+
+  /* Equipment card */
+  .eq-lbl { font-size: 12px; }
+  .eq-val { font-size: 24px; }
+  .gap-who { font-size: 12px; }
+  .gap-val { font-size: 16px; }
+  .gap-sub { font-size: 12px; }
+
+  /* Bio metric tile */
+  .mt-cat { font-size: 12px; }
+  .mt-num { font-size: 22px; }
+  .sb     { font-size: 11px; padding: 2px 7px; }
+  .mt-ctx { font-size: 11px; }
+
+  /* Activity table */
+  .at th  { font-size: 12px; padding: 0 10px 10px; }
+  .at td  { font-size: 14px; padding: 10px 10px; }
+  .al     { font-size: 11px; padding: 3px 8px; }
+
+  /* Stats card (athlete summary) */
+  .sc-name    { font-size: 14px; }
+  .sc-meta    { font-size: 12px; }
+  .sc-stat-row { flex-wrap: wrap; }
+  .sc-stat    { min-width: 50%; padding: 12px 14px; }
+  .sc-stat-val { font-size: 16px; }
+  .sc-stat-lbl { font-size: 12px; margin-top: 2px; }
 
   /* Touch-friendly form inputs (prevent iOS zoom) */
   [data-testid="stNumberInput"] input,
@@ -247,12 +299,16 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   [data-testid="stDateInput"] input { min-height: 44px !important; font-size: 16px !important; }
 
   /* Expander touch target */
-  [data-testid="stExpander"] summary { min-height: 44px !important; display: flex !important;
-    align-items: center !important; }
+  [data-testid="stExpander"] summary { min-height: 48px !important; display: flex !important;
+    align-items: center !important; font-size: 14px !important; }
 
   /* Chart overflow guard */
   [data-testid="stVegaLiteChart"], [data-testid="stArrowVegaLiteChart"],
   [data-testid="stPlotlyChart"] { max-width: 100% !important; overflow-x: hidden !important; }
+
+  /* Submit button - full width, taller */
+  .stButton > button[kind="primary"] { height: 48px !important; font-size: 16px !important;
+    width: 100% !important; border-radius: 14px !important; }
 }
 </style>
 """, unsafe_allow_html=True)
