@@ -69,33 +69,44 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 /* WAR ROOM */
 .wr { background: var(--surf); border: 1px solid var(--out);
   border-radius: 16px; padding: 22px 24px 18px; }
-.wr-standings { display: flex; align-items: stretch; gap: 12px; margin-bottom: 16px; }
-.pc { flex: 1; border-radius: 12px; padding: 16px 18px;
-  display: flex; flex-direction: column; gap: 6px; }
-.pc-r { background: var(--r-bg); border: 1px solid var(--r-bd); }
-.pc-z { background: var(--z-bg); border: 1px solid var(--z-bd); }
-.pc-name { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-.pc-name-r { color: var(--r); }
-.pc-name-z { color: var(--z); }
-.pc-score { font-family: 'Roboto Mono', monospace;
-  font-size: 42px; font-weight: 400; line-height: 1; letter-spacing: -1px; color: var(--on); }
-.pc-unit { font-size: 14px; color: var(--on-v); }
-.pc-sub { font-size: 11px; color: var(--on-v); }
-.lp { align-self: center; padding: 10px 14px; border-radius: 24px;
-  text-align: center; min-width: 100px; }
-.lp-r { background: var(--r-bg); border: 1px solid var(--r-bd); }
-.lp-z { background: var(--z-bg); border: 1px solid var(--z-bd); }
-.lp-pts { font-family: 'Roboto Mono', monospace;
-  font-size: 22px; font-weight: 400; line-height: 1; }
-.lp-pts-r { color: var(--r); }
-.lp-pts-z { color: var(--z); }
-.lp-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; color: var(--on-v); margin-top: 2px; }
-.wr-pace { display: flex; gap: 10px; }
-.wp { flex: 1; border-radius: 10px; background: var(--s-hi);
-  border: 1px solid var(--out-v); padding: 12px 16px;
-  display: flex; align-items: center; justify-content: space-between; }
-.wp-lbl { font-size: 11px; color: var(--on-v); margin-bottom: 2px; }
-.wp-val { font-family: 'Roboto Mono', monospace; font-size: 16px; color: var(--on); }
+/* Score header */
+.wr-scores { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
+.ws-player { flex: 1; }
+.ws-player-z { text-align: right; }
+.ws-name { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.ws-name-r { color: var(--r); }
+.ws-name-z { color: var(--z); }
+.ws-score { font-family: 'Roboto Mono', monospace;
+  font-size: 44px; font-weight: 400; line-height: 1; letter-spacing: -1.5px; color: var(--on); }
+.ws-unit { font-size: 15px; color: var(--on-v); font-weight: 400; }
+.ws-pct { font-size: 12px; font-weight: 500; margin-top: 5px; }
+.ws-mid { text-align: center; padding-bottom: 6px; flex-shrink: 0; }
+.ws-lead-pts { font-family: 'Roboto Mono', monospace; font-size: 26px; font-weight: 400; line-height: 1; }
+.ws-lead-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; color: var(--on-v); margin-top: 3px; }
+/* Battle (tug-of-war) bar */
+.bb-wrap { margin: 0 0 18px; }
+.bb-track { height: 18px; border-radius: 9px; overflow: hidden; position: relative; }
+.bb-r { position: absolute; left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(208,188,255,0.55) 0%, #D0BCFF 100%);
+  border-radius: 9px 0 0 9px; }
+.bb-mid-line { position: absolute; top: 0; bottom: 0; width: 2px;
+  background: rgba(28,27,31,0.7); left: calc(50% - 1px); }
+.bb-labels { display: flex; justify-content: space-between; align-items: center;
+  margin-top: 7px; font-size: 11px; }
+/* Pace visual bars */
+.pv { background: var(--s-hi); border: 1px solid var(--out-v);
+  border-radius: 10px; padding: 14px 18px; }
+.pv-title { font-size: 10px; font-weight: 500; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--on-v); margin-bottom: 12px; }
+.pv-row { display: flex; align-items: center; gap: 10px; }
+.pv-row + .pv-row { margin-top: 10px; }
+.pv-name { font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase; width: 76px; flex-shrink: 0; }
+.pv-track { flex: 1; height: 8px; border-radius: 4px;
+  background: rgba(202,196,208,0.08); overflow: hidden; }
+.pv-fill { height: 100%; border-radius: 4px; }
+.pv-val { font-family: 'Roboto Mono', monospace; font-size: 13px; width: 58px;
+  text-align: right; flex-shrink: 0; }
 .dl { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
 .dl-r { background: var(--r-bg); color: var(--r); }
 .dl-z { background: var(--z-bg); color: var(--z); }
@@ -287,6 +298,8 @@ z_total   = int(df_sim["Zoe 負荷"].sum())
 lead_diff = r_total - z_total
 r_pace    = round(df_sim["Randall 配速"].mean(), 2)
 z_pace    = round(df_sim["Zoe 配速"].mean(), 2)
+r_cum     = df_sim["Randall 負荷"].cumsum().tolist()
+z_cum     = df_sim["Zoe 負荷"].cumsum().tolist()
 
 def chart_base(reverse_y=False):
     base = dict(
@@ -343,53 +356,77 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-if abs(lead_diff) < 3:
-    lp_cls, lp_pts_cls = "lp-r", "lp-pts-r"
-    lp_pts_str, lp_who = "TIE", "勢均力敵"
-elif lead_diff > 0:
-    lp_cls, lp_pts_cls = "lp-r", "lp-pts-r"
-    lp_pts_str, lp_who = f"+{lead_diff}", "RANDALL 領先"
-else:
-    lp_cls, lp_pts_cls = "lp-z", "lp-pts-z"
-    lp_pts_str, lp_who = f"+{abs(lead_diff)}", "ZOE 領先"
+# Battle bar calculations
+_total  = r_total + z_total
+r_pct   = round(r_total / _total * 100)
+z_pct   = 100 - r_pct
 
+if abs(lead_diff) < 3:
+    lp_color, lp_pts_str, lp_who = "#CAC4D0", "TIE", "勢均力敵"
+elif lead_diff > 0:
+    lp_color, lp_pts_str, lp_who = "#D0BCFF", f"+{lead_diff}", "RANDALL 領先"
+else:
+    lp_color, lp_pts_str, lp_who = "#60A5FA", f"+{abs(lead_diff)}", "ZOE 領先"
+
+# Pace visual bar (lower = faster; scale to 8.0 min/km max)
+_pace_scale = 8.0
+r_bar = round(r_pace / _pace_scale * 100)
+z_bar = round(z_pace / _pace_scale * 100)
 r_faster = r_pace < z_pace
 r_pace_dl = "dl-r" if r_faster else "dl-n"
 z_pace_dl = "dl-z" if not r_faster else "dl-n"
 r_pace_tag = "✓ 較快" if r_faster else f"▲ +{round(r_pace-z_pace,2)}"
 z_pace_tag = "✓ 較快" if not r_faster else f"▲ +{round(z_pace-r_pace,2)}"
 
+# Battle bar background = Zoe's colour (blue), Randall fills from left (purple)
 st.markdown(f"""
 <div class="wr">
-  <div class="wr-standings">
-    <div class="pc pc-r">
-      <div class="pc-name pc-name-r">⚡ RANDALL · COROS</div>
-      <div class="pc-score">{r_total}<span class="pc-unit"> pts</span></div>
-      <div class="pc-sub">本週累積訓練負荷</div>
+  <!-- Score header -->
+  <div class="wr-scores">
+    <div class="ws-player">
+      <div class="ws-name ws-name-r">⚡ RANDALL · COROS</div>
+      <div class="ws-score">{r_total}<span class="ws-unit"> pts</span></div>
+      <div class="ws-pct" style="color:#D0BCFF">{r_pct}% 本週份額</div>
     </div>
-    <div class="lp {lp_cls}">
-      <div class="lp-pts {lp_pts_cls}">{lp_pts_str}</div>
-      <div class="lp-lbl">{lp_who}</div>
+    <div class="ws-mid">
+      <div class="ws-lead-lbl">{lp_who}</div>
+      <div class="ws-lead-pts" style="color:{lp_color}">{lp_pts_str}</div>
     </div>
-    <div class="pc pc-z">
-      <div class="pc-name pc-name-z">★ ZOE · STRAVA</div>
-      <div class="pc-score">{z_total}<span class="pc-unit"> pts</span></div>
-      <div class="pc-sub">本週累積訓練負荷</div>
+    <div class="ws-player ws-player-z">
+      <div class="ws-name ws-name-z">★ ZOE · STRAVA</div>
+      <div class="ws-score">{z_total}<span class="ws-unit"> pts</span></div>
+      <div class="ws-pct" style="color:#60A5FA">{z_pct}% 本週份額</div>
     </div>
   </div>
-  <div class="wr-pace">
-    <div class="wp">
-      <div>
-        <div class="wp-lbl">⚡ Randall · Zone 2 平均配速</div>
-        <div class="wp-val">{r_pace} <span style="font-size:11px;color:#CAC4D0">min/km</span></div>
+  <!-- Tug-of-war battle bar -->
+  <div class="bb-wrap">
+    <div class="bb-track" style="background:rgba(96,165,250,0.22)">
+      <div class="bb-r" style="width:{r_pct}%"></div>
+      <div class="bb-mid-line"></div>
+    </div>
+    <div class="bb-labels">
+      <span style="color:#D0BCFF">⚡ {r_pct}%</span>
+      <span style="font-size:10px;color:rgba(202,196,208,0.4)">｜ 50% 均衡點 ｜</span>
+      <span style="color:#60A5FA">{z_pct}% ★</span>
+    </div>
+  </div>
+  <!-- Zone 2 pace visual bars -->
+  <div class="pv">
+    <div class="pv-title">Zone 2 配速對比 <span style="font-weight:400;opacity:0.6">min/km · 條越短越快</span></div>
+    <div class="pv-row">
+      <div class="pv-name" style="color:#D0BCFF">⚡ Randall</div>
+      <div class="pv-track">
+        <div class="pv-fill" style="width:{r_bar}%;background:#D0BCFF"></div>
       </div>
+      <div class="pv-val" style="color:#D0BCFF">{r_pace}</div>
       <span class="dl {r_pace_dl}">{r_pace_tag}</span>
     </div>
-    <div class="wp">
-      <div>
-        <div class="wp-lbl">★ Zoe · Zone 2 平均配速</div>
-        <div class="wp-val">{z_pace} <span style="font-size:11px;color:#CAC4D0">min/km</span></div>
+    <div class="pv-row">
+      <div class="pv-name" style="color:#60A5FA">★ Zoe</div>
+      <div class="pv-track">
+        <div class="pv-fill" style="width:{z_bar}%;background:#60A5FA"></div>
       </div>
+      <div class="pv-val" style="color:#60A5FA">{z_pace}</div>
       <span class="dl {z_pace_dl}">{z_pace_tag}</span>
     </div>
   </div>
@@ -475,6 +512,38 @@ with cr:
       </div>
     </div>""", unsafe_allow_html=True)
 
+# Cumulative load chart — full width
+st.markdown('<div class="cc" style="margin-top:12px"><div class="cc-title">累積訓練量趨勢</div><div class="cc-sub">Cumulative Load · 過去 7 天 <span class="sim">⚠ 模擬</span></div>', unsafe_allow_html=True)
+fig_cum = go.Figure()
+for _name, _y, _color, _fill in [
+    ("⚡ Randall", r_cum, "#D0BCFF", "rgba(208,188,255,0.10)"),
+    ("★ Zoe",     z_cum, "#60A5FA", "rgba(96,165,250,0.08)"),
+]:
+    fig_cum.add_trace(go.Scatter(
+        x=df_sim["日期"], y=_y, name=_name, mode="lines+markers",
+        line=dict(color=_color, width=2.5, shape="spline", smoothing=0.6),
+        marker=dict(size=6, color=_color, line=dict(width=1.5, color="#211F26")),
+        fill="tozeroy", fillcolor=_fill,
+        hovertemplate="%{y} pts",
+    ))
+fig_cum.update_layout(**chart_base(), height=190)
+st.plotly_chart(fig_cum, use_container_width=True)
+st.markdown(f"""
+<div class="cc-stats">
+  <div class="cc-stat">
+    <div class="cc-stat-val" style="color:#D0BCFF">{r_cum[-1]}</div>
+    <div class="cc-stat-lbl">⚡ Randall 7 天累積</div>
+  </div>
+  <div class="cc-stat">
+    <div class="cc-stat-val" style="color:#60A5FA">{z_cum[-1]}</div>
+    <div class="cc-stat-lbl">★ Zoe 7 天累積</div>
+  </div>
+  <div class="cc-stat">
+    <div class="cc-stat-val"><span class="dl {"dl-r" if r_cum[-1] >= z_cum[-1] else "dl-z"}">{("+" if r_cum[-1] >= z_cum[-1] else "") + str(r_cum[-1]-z_cum[-1])}</span></div>
+    <div class="cc-stat-lbl">累積差距</div>
+  </div>
+</div>""", unsafe_allow_html=True)
+
 # ── 4  TEAM READINESS ──────────────────────────────────────────────────────────
 st.markdown("""
 <div class="sh">
@@ -550,6 +619,35 @@ with eq2:
         </div>
       </div>
     </div>""", unsafe_allow_html=True)
+
+# Equipment readiness bar chart — full width
+st.markdown('<div class="cc" style="margin-top:16px"><div class="cc-title">器材達標率對比</div><div class="cc-sub">相對 Women\'s Doubles 官方標準 100% <span class="sim">⚠ Zoe 模擬</span></div>', unsafe_allow_html=True)
+_eq_items   = ["Sled Push (102 kg)", "Wall Balls (75 下)"]
+_r_scores   = [100, wb_pct]
+_z_scores   = [103, 50]
+fig_eq = go.Figure()
+fig_eq.add_trace(go.Bar(
+    name="⚡ Randall", x=_eq_items, y=_r_scores,
+    marker=dict(color="#D0BCFF", opacity=0.82, line=dict(width=0)),
+    text=[f"{v}%" for v in _r_scores], textposition="outside",
+    textfont=dict(color="#D0BCFF", size=11),
+))
+fig_eq.add_trace(go.Bar(
+    name="★ Zoe", x=_eq_items, y=_z_scores,
+    marker=dict(color="#60A5FA", opacity=0.82, line=dict(width=0)),
+    text=[f"{v}%" for v in _z_scores], textposition="outside",
+    textfont=dict(color="#60A5FA", size=11),
+))
+_eq_layout = chart_base()
+_eq_layout["barmode"] = "group"
+_eq_layout["yaxis"]["range"] = [0, 130]
+_eq_layout["height"] = 200
+fig_eq.update_layout(**_eq_layout)
+fig_eq.add_shape(type="line", x0=-0.5, x1=1.5, y0=100, y1=100,
+                  line=dict(color="rgba(77,182,172,0.55)", width=1.5, dash="dash"))
+fig_eq.add_annotation(x=1.5, y=100, text="目標 100%", showarrow=False,
+                       xanchor="left", font=dict(color="#4DB6AC", size=10))
+st.plotly_chart(fig_eq, use_container_width=True)
 
 # ── 5  MISSION DEBRIEF ─────────────────────────────────────────────────────────
 st.markdown("""
@@ -653,6 +751,65 @@ for (key, label, color, iconbg, val, cls, badge, ctx), col in zip(TILES, bio_col
             <span class="mt-ctx">{ctx}</span>
           </div>
         </div>""", unsafe_allow_html=True)
+
+# Bio radar chart
+_bio_rec = int(health["recovery"].replace("%","")) if "%" in str(health["recovery"]) else 50
+_bio_slp = int(health["sleep_score"]) if health["sleep_score"] not in ("—","") else 50
+_hr_raw  = int(health["hr"]) if health["hr"] not in ("—","") else 60
+_bio_hr  = max(0, min(100, round((80 - _hr_raw) / 40 * 100)))  # 40bpm=100%, 80bpm=0%
+_st_raw  = int(health["stress"]) if health["stress"] not in ("—","") else 50
+_bio_st  = max(0, min(100, round((100 - _st_raw))))             # 0 stress=100%, 100=0%
+
+_radar_cats = ["恢復力", "睡眠品質", "靜止心率", "抗壓性"]
+_radar_vals = [_bio_rec, _bio_slp, _bio_hr, _bio_st]
+
+bio_r_col, bio_desc_col = st.columns([1, 1])
+with bio_r_col:
+    fig_rd = go.Figure()
+    fig_rd.add_trace(go.Scatterpolar(
+        r=_radar_vals + [_radar_vals[0]],
+        theta=_radar_cats + [_radar_cats[0]],
+        fill="toself",
+        fillcolor="rgba(208,188,255,0.12)",
+        line=dict(color="#D0BCFF", width=2.5),
+        name="Randall",
+        hovertemplate="%{theta}: %{r}",
+    ))
+    fig_rd.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+        polar=dict(
+            bgcolor="rgba(0,0,0,0)",
+            radialaxis=dict(
+                visible=True, range=[0, 100], showticklabels=False,
+                gridcolor="rgba(202,196,208,0.12)", linecolor="rgba(202,196,208,0.12)",
+            ),
+            angularaxis=dict(
+                tickfont=dict(color="#CAC4D0", size=12),
+                gridcolor="rgba(202,196,208,0.12)", linecolor="rgba(202,196,208,0.18)",
+            ),
+        ),
+        legend=dict(orientation="h", yanchor="bottom", y=1.04, xanchor="right", x=1,
+                    font=dict(size=11, color="#CAC4D0"), bgcolor="rgba(0,0,0,0)"),
+        margin=dict(l=20, r=20, t=36, b=20),
+        font=dict(family="Roboto,system-ui", color="#CAC4D0", size=11),
+        hoverlabel=dict(bgcolor="#2B2930", bordercolor="rgba(202,196,208,0.2)",
+                        font=dict(color="#E6E1E5", size=12)),
+        height=270,
+    )
+    st.plotly_chart(fig_rd, use_container_width=True)
+
+with bio_desc_col:
+    _bio_overall = round(sum(_radar_vals) / len(_radar_vals))
+    _bio_grade   = ("sb-ok","優良") if _bio_overall >= 70 else ("sb-med","普通") if _bio_overall >= 50 else ("sb-bad","偏弱")
+    st.markdown(f"""
+    <div style="padding:16px 8px">
+      <div style="font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#CAC4D0;margin-bottom:12px">生物指標總覽</div>
+      {''.join([f'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(202,196,208,0.08)"><span style="font-size:12px;color:#CAC4D0">{c}</span><div style="display:flex;align-items:center;gap:8px"><div style="width:60px;height:5px;border-radius:3px;background:rgba(202,196,208,0.08);overflow:hidden"><div style="width:{v}%;height:100%;background:#D0BCFF;border-radius:3px"></div></div><span style="font-family:\'Roboto Mono\',monospace;font-size:13px;color:#D0BCFF;width:28px;text-align:right">{v}</span></div></div>' for c,v in zip(_radar_cats,_radar_vals)])}
+      <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
+        <span style="font-family:\'Roboto Mono\',monospace;font-size:30px;color:#D0BCFF;font-weight:400">{_bio_overall}</span>
+        <div><span class="sb {_bio_grade[0]}" style="display:inline-block;margin-bottom:4px">{_bio_grade[1]}</span><div style="font-size:10px;color:rgba(202,196,208,0.5)">綜合生物指數 / 100</div></div>
+      </div>
+    </div>""", unsafe_allow_html=True)
 
 # ── 7  TRAINING LOG ────────────────────────────────────────────────────────────
 with st.expander("📋 Show Full Training Log — Randall · COROS", expanded=False):
