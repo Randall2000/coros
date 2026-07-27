@@ -220,94 +220,99 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 8px !important; }
   [data-testid="column"] { min-width: 100% !important; flex: 1 1 100% !important; }
 
+  /* Global minimum: any text smaller than 20px on mobile is an error */
+  html, body, .stApp, [data-testid="stAppViewContainer"] { font-size: 20px !important; }
+
   /* Page header */
-  .ph-title  { font-size: 18px; }
-  .chip      { font-size: 13px; height: 30px; padding: 0 12px; }
-  .sync-lbl  { font-size: 12px; }
+  .ph-title  { font-size: 22px; }
+  .chip      { font-size: 20px; height: 36px; padding: 0 14px; }
+  .sync-lbl  { font-size: 20px; }
 
   /* Section header */
-  .sh       { margin: 22px 0 12px; }
-  .sh-tag   { font-size: 12px; }
-  .sh-title { font-size: 20px; }
-  .sh-sub   { font-size: 13px; }
+  .sh       { margin: 24px 0 14px; }
+  .sh-tag   { font-size: 20px; letter-spacing: 1px; }
+  .sh-title { font-size: 24px; }
+  .sh-sub   { font-size: 20px; }
 
   /* Card padding */
-  .wr { padding: 16px 16px 14px; border-radius: 14px; }
-  .sc { padding: 16px 16px; border-radius: 12px; }
-  .cc { padding: 14px 14px 6px; }
-  .eq { padding: 14px 16px; gap: 12px; }
-  .mt { padding: 12px 12px 10px; }
+  .wr { padding: 18px 16px 16px; border-radius: 14px; }
+  .sc { padding: 18px 16px; border-radius: 12px; }
+  .cc { padding: 16px 14px 8px; }
+  .eq { padding: 16px 16px; gap: 14px; }
+  .mt { padding: 14px 14px 12px; }
 
   /* Score card - player names */
-  .ws-name    { font-size: 12px; letter-spacing: 0.8px; }
-  .ws-score   { font-size: 36px !important; letter-spacing: -1px; }
-  .ws-unit    { font-size: 14px; }
-  .ws-pct     { font-size: 13px; }
-  .ws-lead-pts { font-size: 22px !important; }
-  .ws-lead-lbl { font-size: 12px; }
+  .ws-name     { font-size: 20px; letter-spacing: 0.5px; }
+  .ws-score    { font-size: 40px !important; letter-spacing: -1px; }
+  .ws-unit     { font-size: 20px; }
+  .ws-pct      { font-size: 20px; }
+  .ws-lead-pts { font-size: 28px !important; }
+  .ws-lead-lbl { font-size: 20px; }
 
   /* Battle bar labels */
-  .bb-labels  { font-size: 13px; margin-top: 8px; }
-  .bb-track   { height: 20px; border-radius: 10px; }
+  .bb-labels  { font-size: 20px; margin-top: 10px; }
+  .bb-track   { height: 22px; border-radius: 11px; }
 
   /* Pace section */
-  .pv         { padding: 14px 16px; }
-  .pv-title   { font-size: 12px; margin-bottom: 14px; }
+  .pv         { padding: 16px 16px; }
+  .pv-title   { font-size: 20px; margin-bottom: 16px; }
   .pv-row     { gap: 10px; }
-  .pv-row + .pv-row { margin-top: 12px; }
-  .pv-name    { font-size: 12px; width: 72px; }
+  .pv-row + .pv-row { margin-top: 14px; }
+  .pv-name    { font-size: 20px; width: 90px; }
   .pv-track   { height: 10px; border-radius: 5px; }
-  .pv-val     { font-size: 15px; width: 52px; }
-  .dl         { font-size: 12px; padding: 3px 8px; }
+  .pv-val     { font-size: 20px; width: 64px; }
+  .dl         { font-size: 20px; padding: 4px 10px; }
 
   /* Chart card */
-  .cc-title   { font-size: 15px; }
-  .cc-sub     { font-size: 13px; margin-bottom: 10px; }
-  .cc-stat-val { font-size: 16px; }
-  .cc-stat-lbl { font-size: 12px; }
+  .cc-title    { font-size: 20px; }
+  .cc-sub      { font-size: 20px; margin-bottom: 12px; }
+  .cc-stat-val { font-size: 22px; }
+  .cc-stat-lbl { font-size: 20px; }
+  .cc-stat     { padding: 10px 12px; }
 
   /* Equipment card */
-  .eq-lbl { font-size: 12px; }
-  .eq-val { font-size: 24px; }
-  .gap-who { font-size: 12px; }
-  .gap-val { font-size: 16px; }
-  .gap-sub { font-size: 12px; }
+  .eq-lbl { font-size: 20px; }
+  .eq-val { font-size: 28px; }
+  .gap-who { font-size: 20px; }
+  .gap-val { font-size: 22px; }
+  .gap-sub { font-size: 20px; }
 
   /* Bio metric tile */
-  .mt-cat { font-size: 12px; }
-  .mt-num { font-size: 22px; }
-  .sb     { font-size: 11px; padding: 2px 7px; }
-  .mt-ctx { font-size: 11px; }
+  .mt-cat { font-size: 20px; }
+  .mt-num { font-size: 26px; }
+  .sb     { font-size: 20px; padding: 3px 8px; }
+  .mt-ctx { font-size: 20px; }
 
   /* Activity table */
-  .at th  { font-size: 12px; padding: 0 10px 10px; }
-  .at td  { font-size: 14px; padding: 10px 10px; }
-  .al     { font-size: 11px; padding: 3px 8px; }
+  .at th  { font-size: 20px; padding: 0 12px 12px; }
+  .at td  { font-size: 20px; padding: 12px 12px; }
+  .al     { font-size: 20px; padding: 4px 10px; }
+  .sim    { font-size: 20px; padding: 3px 8px; }
 
   /* Stats card (athlete summary) */
-  .sc-name    { font-size: 14px; }
-  .sc-meta    { font-size: 12px; }
+  .sc-name    { font-size: 20px; }
+  .sc-meta    { font-size: 20px; }
   .sc-stat-row { flex-wrap: wrap; }
-  .sc-stat    { min-width: 50%; padding: 12px 14px; }
-  .sc-stat-val { font-size: 16px; }
-  .sc-stat-lbl { font-size: 12px; margin-top: 2px; }
+  .sc-stat    { min-width: 50%; padding: 14px 14px; }
+  .sc-stat-val { font-size: 22px; }
+  .sc-stat-lbl { font-size: 20px; margin-top: 4px; }
 
-  /* Touch-friendly form inputs (prevent iOS zoom) */
+  /* Touch-friendly form inputs */
   [data-testid="stNumberInput"] input,
   [data-testid="stTextInput"] input,
   [data-testid="stSelectbox"] select,
-  [data-testid="stDateInput"] input { min-height: 44px !important; font-size: 16px !important; }
+  [data-testid="stDateInput"] input { min-height: 52px !important; font-size: 20px !important; }
 
   /* Expander touch target */
-  [data-testid="stExpander"] summary { min-height: 48px !important; display: flex !important;
-    align-items: center !important; font-size: 14px !important; }
+  [data-testid="stExpander"] summary { min-height: 52px !important; display: flex !important;
+    align-items: center !important; font-size: 20px !important; }
 
   /* Chart overflow guard */
   [data-testid="stVegaLiteChart"], [data-testid="stArrowVegaLiteChart"],
   [data-testid="stPlotlyChart"] { max-width: 100% !important; overflow-x: hidden !important; }
 
   /* Submit button - full width, taller */
-  .stButton > button[kind="primary"] { height: 48px !important; font-size: 16px !important;
+  .stButton > button[kind="primary"] { height: 52px !important; font-size: 20px !important;
     width: 100% !important; border-radius: 14px !important; }
 }
 </style>
