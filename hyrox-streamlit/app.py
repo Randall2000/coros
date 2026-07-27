@@ -574,7 +574,7 @@ _rand_zoe_load  = [random.randint(38, 82) for _ in range(7)]
 _rand_zoe_pace  = [round(random.uniform(6.2, 7.8), 2) for _ in range(7)]
 _rand_r_pace    = [round(random.uniform(5.8, 7.2), 2) for _ in range(7)]
 
-_zoe_loads = [zoe["by_day"].get(d, _rand_zoe_load[i]) for i, d in enumerate(dates_iso)]
+_zoe_loads = [zoe["by_day"].get(d, 0) for d in dates_iso]
 _zoe_paces = []
 for i, d in enumerate(dates_iso):
     real_paces = zoe.get("by_day_pace", {}).get(d)
@@ -657,6 +657,13 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# Formula breakdown for display
+_r_run_raw = int(sum(_r_loads))
+_r_run_hx  = int(sum(_r_loads_hx))
+_r_str_hx  = int(_r_str_tl * _HX_STR)
+_z_run_raw = int(sum(_zoe_loads))
+_z_run_hx  = int(sum(_zoe_loads_hx))
+
 # Battle bar calculations
 _total  = r_total + z_total
 r_pct   = round(r_total / _total * 100)
@@ -697,6 +704,24 @@ st.markdown(f"""
       <div class="ws-name ws-name-z">★ ZOE · 手動輸入</div>
       <div class="ws-score">{z_total}<span class="ws-unit"> pts</span></div>
       <div class="ws-pct" style="color:#E3B341">{z_pct}% 本週份額</div>
+    </div>
+  </div>
+  <!-- Scoring formula breakdown -->
+  <div style="background:rgba(22,27,34,0.6);border:1px solid rgba(48,54,61,0.6);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#8B949E;line-height:1.8">
+    <div style="color:#C9D1D9;font-weight:600;margin-bottom:6px">📐 積分公式（HYROX 權重）</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap">
+      <div>
+        <span style="color:#58A6FF;font-weight:600">⚡ Randall</span><br>
+        跑步 {_r_run_raw} TL × {_HX_RUN} = {_r_run_hx}<br>
+        肌力 {_r_str_tl} TL × {_HX_STR} = {_r_str_hx}<br>
+        <span style="color:#58A6FF">合計 {r_total} pts</span>
+      </div>
+      <div>
+        <span style="color:#E3B341;font-weight:600">★ Zoe</span><br>
+        跑步 {_z_run_raw} TL × {_HX_RUN} = {_z_run_hx}<br>
+        肌力 — (無資料)<br>
+        <span style="color:#E3B341">合計 {z_total} pts</span>
+      </div>
     </div>
   </div>
   <!-- Tug-of-war battle bar -->
