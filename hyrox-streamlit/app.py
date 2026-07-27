@@ -525,6 +525,28 @@ def parse_activities(a):
                         "dur":dur,"hr":hr,"cal":cal,"tag":tag})
     return records[:5]
 
+# ── HYROX WEIGHTS ──────────────────────────────────────────────────────────────
+_HX_RUN = 1.5   # Running: 8km backbone of HYROX
+_HX_STR = 1.2   # Strength/Functional: 8 workout stations
+_HX_ROW = 1.3   # Rowing / SkiErg: specific race events
+
+def _calc_str_tl_7d(acts_text: str) -> int:
+    """Estimate 7-day strength TL from COROS activities text."""
+    cutoff = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d")
+    total = 0
+    for block in re.split(r"\n\d+\.", acts_text)[1:]:
+        if not (dm := re.search(r"(\d{4}-\d{2}-\d{2})", block)):
+            continue
+        if dm.group(1) < cutoff:
+            continue
+        dur_min = 0
+        if tm := re.search(r"Duration[:\s]*(\d+):(\d+)", block, re.I):
+            dur_min = int(tm.group(1)) + int(tm.group(2)) / 60
+        hr = int(hm.group(1)) if (hm := re.search(r"Avg HR[:\s]*(\d+)", block, re.I)) else 0
+        intensity = min(hr / 150, 1.2) if hr > 0 else 0.7
+        total += round(dur_min * intensity)
+    return total
+
 # ── LOAD ───────────────────────────────────────────────────────────────────────
 h_raw  = load_json(DATA / "health.json")
 a_raw  = load_json(DATA / "activities.json")
@@ -547,10 +569,9 @@ _zoe_source_lbl = ("手動輸入" if _zoe_is_manual
                    else "intervals.icu" if _zoe_has_real
                    else "模擬")
 
-# Fallback random data (only used for days with no real records)
+# Fallback: 0 for days without records (no fake random)
 _rand_zoe_load  = [random.randint(38, 82) for _ in range(7)]
 _rand_zoe_pace  = [round(random.uniform(6.2, 7.8), 2) for _ in range(7)]
-_rand_r_load    = [0] * 7   # default 0 (no run) rather than fake random
 _rand_r_pace    = [round(random.uniform(5.8, 7.2), 2) for _ in range(7)]
 
 _zoe_loads = [zoe["by_day"].get(d, _rand_zoe_load[i]) for i, d in enumerate(dates_iso)]
@@ -559,23 +580,28 @@ for i, d in enumerate(dates_iso):
     real_paces = zoe.get("by_day_pace", {}).get(d)
     _zoe_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_zoe_pace[i])
 
-# Randall load: use real run data when available, else 0 (no run that day)
-_r_loads = [randall_runs["by_day"].get(d, _rand_r_load[i]) for i, d in enumerate(dates_iso)]
+_r_loads = [randall_runs["by_day"].get(d, 0) for d in dates_iso]
 _r_paces = []
 for i, d in enumerate(dates_iso):
     real_paces = randall_runs.get("by_day_pace", {}).get(d)
     _r_paces.append(round(sum(real_paces)/len(real_paces), 2) if real_paces else _rand_r_pace[i])
 
+# HYROX-weighted loads for chart (running × 1.5)
+_r_loads_hx  = [round(v * _HX_RUN) for v in _r_loads]
+_zoe_loads_hx = [round(v * _HX_RUN) for v in _zoe_loads]
+
 df_sim = pd.DataFrame({
     "日期":         dates_7,
-    "Randall 負荷": _r_loads,
-    "Zoe 負荷":     _zoe_loads,
+    "Randall 負荷": _r_loads_hx,
+    "Zoe 負荷":     _zoe_loads_hx,
     "Randall 配速": _r_paces,
     "Zoe 配速":     _zoe_paces,
 })
 
-r_total   = int(df_sim["Randall 負荷"].sum())
-z_total   = int(df_sim["Zoe 負荷"].sum())
+# HYROX-weighted totals: run × 1.5 + strength × 1.2
+_r_str_tl = _calc_str_tl_7d(a_raw.get("activities", ""))
+r_total   = int(sum(_r_loads_hx) + _r_str_tl * _HX_STR)
+z_total   = int(sum(_zoe_loads_hx))
 lead_diff = r_total - z_total
 r_pace    = round(df_sim["Randall 配速"].mean(), 2)
 z_pace    = round(df_sim["Zoe 配速"].mean(), 2)
