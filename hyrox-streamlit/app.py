@@ -18,7 +18,7 @@ st.set_page_config(
 # ── CSS ────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap');
 
 #MainMenu, header[data-testid="stHeader"], footer,
 [data-testid="stToolbar"], [data-testid="stDecoration"],
@@ -27,12 +27,12 @@ st.markdown("""
 /* ── BENTO BOX DESIGN SYSTEM ─────────────────────────────── */
 :root {
   --bg:    #080808;
-  --s0:    #111111;
-  --s1:    #191919;
-  --s2:    #212121;
-  --on:    #F0F0F0;
-  --on-v:  rgba(240,240,240,0.38);
-  --bd:    rgba(255,255,255,0.07);
+  --s0:    #141414;
+  --s1:    #1D1D1D;
+  --s2:    #262626;
+  --on:    #F2F2F2;
+  --on-v:  rgba(242,242,242,0.58);
+  --bd:    rgba(255,255,255,0.10);
   --r:     #00B4FF;
   --r-bg:  rgba(0,180,255,0.10);
   --r-bd:  rgba(0,180,255,0.28);
@@ -52,7 +52,7 @@ st.markdown("""
 
 html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: var(--bg) !important;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Barlow', system-ui, sans-serif;
   color: var(--on); font-size: 15px; line-height: 1.5;
 }
 .block-container { padding: 20px 16px 72px !important; max-width: 100% !important; }
@@ -71,7 +71,8 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .sh { margin: 32px 0 16px; }
 .sh-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px;
   text-transform: uppercase; color: var(--on-v); margin-bottom: 4px; }
-.sh-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--on); margin: 0; }
+.sh-title { font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-size: 26px; font-weight: 700; letter-spacing: 0.3px; color: var(--on); margin: 0; }
 .sh-sub { font-size: 12px; color: var(--on-v); margin-top: 3px; }
 
 /* ── WAR ROOM (Bento hero card) ─────────────────────────── */
@@ -86,12 +87,12 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   text-transform: uppercase; margin-bottom: 6px; }
 .ws-name-r { color: var(--r); }
 .ws-name-z { color: var(--z); }
-.ws-score { font-family: 'Roboto Mono', monospace;
-  font-size: 52px; font-weight: 700; line-height: 1; letter-spacing: -2px; color: var(--on); }
-.ws-unit { font-size: 18px; color: var(--on-v); font-weight: 400; letter-spacing: 0; }
+.ws-score { font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-size: 58px; font-weight: 800; line-height: 1; letter-spacing: -1px; color: var(--on); }
+.ws-unit { font-size: 18px; color: var(--on-v); font-weight: 500; letter-spacing: 0; }
 .ws-pct { font-size: 12px; font-weight: 600; margin-top: 6px; }
 .ws-mid { text-align: center; padding-bottom: 4px; flex-shrink: 0; }
-.ws-lead-pts { font-family: 'Roboto Mono', monospace; font-size: 30px; font-weight: 700; line-height: 1; }
+.ws-lead-pts { font-family: 'Barlow Condensed', system-ui, sans-serif; font-size: 34px; font-weight: 800; line-height: 1; }
 .ws-lead-lbl { font-size: 10px; font-weight: 600; letter-spacing: 1px;
   text-transform: uppercase; color: var(--on-v); margin-top: 4px; }
 
@@ -100,11 +101,15 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .bb-track { height: 22px; border-radius: 11px; overflow: hidden; position: relative;
   background: var(--s2); }
 .bb-r { position: absolute; left: 0; top: 0; bottom: 0;
-  background: linear-gradient(90deg, rgba(0,180,255,0.4) 0%, #00B4FF 100%);
+  background: linear-gradient(90deg, rgba(0,180,255,0.45) 0%, #00B4FF 100%);
   border-radius: 11px 0 0 11px; }
+.bb-r::after { content:''; position:absolute; inset:0; border-radius: 11px 0 0 11px;
+  background: repeating-linear-gradient(-55deg,transparent,transparent 4px,rgba(0,0,0,0.12) 4px,rgba(0,0,0,0.12) 5px); }
 .bb-z { position: absolute; right: 0; top: 0; bottom: 0;
-  background: linear-gradient(270deg, rgba(255,122,0,0.4) 0%, #FF7A00 100%);
+  background: linear-gradient(270deg, rgba(255,122,0,0.45) 0%, #FF7A00 100%);
   border-radius: 0 11px 11px 0; }
+.bb-z::after { content:''; position:absolute; inset:0; border-radius: 0 11px 11px 0;
+  background: repeating-linear-gradient(55deg,transparent,transparent 4px,rgba(0,0,0,0.12) 4px,rgba(0,0,0,0.12) 5px); }
 .bb-mid-line { position: absolute; top: 2px; bottom: 2px; width: 2px;
   background: rgba(8,8,8,0.7); left: calc(50% - 1px); border-radius: 1px; }
 .bb-labels { display: flex; justify-content: space-between; align-items: center;
@@ -172,9 +177,9 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   text-transform: uppercase; color: var(--on-v); }
 .mt-ico { width: 26px; height: 26px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center; }
-.mt-num { font-family: 'Roboto Mono', monospace;
-  font-size: 32px; font-weight: 700; color: var(--on);
-  letter-spacing: -1px; line-height: 1; }
+.mt-num { font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-size: 36px; font-weight: 800; color: var(--on);
+  letter-spacing: 0px; line-height: 1; }
 .mt-foot { display: flex; align-items: center; gap: 6px; }
 .sb { font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
   padding: 3px 10px; border-radius: 100px; }
@@ -226,12 +231,17 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 /* Streamlit overrides */
 [data-testid="stExpander"] { background: var(--s0) !important;
   border: 1px solid var(--bd) !important; border-radius: 16px !important; }
-[data-testid="stExpander"] summary { color: var(--on-v) !important; }
+[data-testid="stExpander"] summary { color: var(--on-v) !important; cursor: pointer !important; }
+[data-testid="stExpander"] summary:hover { color: var(--on) !important; }
+.stButton > button { cursor: pointer !important; transition: opacity 150ms ease, transform 100ms ease !important; }
+.stButton > button:hover { opacity: 0.88 !important; }
+.stButton > button:active { transform: scale(0.97) !important; }
 .stButton > button[kind="primary"] {
   background: var(--r) !important; color: #080808 !important;
   border: none !important; border-radius: 100px !important;
+  font-family: 'Barlow', sans-serif !important;
   font-weight: 700 !important; font-size: 14px !important; height: 42px !important;
-  letter-spacing: 0.3px !important; }
+  letter-spacing: 0.5px !important; }
 
 /* ── MOBILE (≤ 640px) ────────────────────────────────────── */
 @media (max-width: 640px) {
@@ -663,7 +673,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="sh">
   <div class="sh-tag">WAR ROOM</div>
-  <div class="sh-title">⚡ 本週戰況排名</div>
+  <div class="sh-title">本週戰況排名</div>
   <div class="sh-sub">每週日自動歸零 · Zoe 每日手動輸入</div>
 </div>
 """, unsafe_allow_html=True)
@@ -754,7 +764,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="sh">
   <div class="sh-tag">BATTLEGROUND</div>
-  <div class="sh-title">📊 七日訓練對比</div>
+  <div class="sh-title">七日訓練對比</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -865,7 +875,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="sh">
   <div class="sh-tag">TEAM READINESS</div>
-  <div class="sh-title">🎯 器材備戰</div>
+  <div class="sh-title">器材備戰</div>
   <div class="sh-sub">Women's Doubles 官方標準</div>
 </div>
 """, unsafe_allow_html=True)
@@ -963,7 +973,7 @@ st.plotly_chart(fig_eq, use_container_width=True)
 st.markdown("""
 <div class="sh">
   <div class="sh-tag">MISSION DEBRIEF</div>
-  <div class="sh-title">📋 每週戰略盤點</div>
+  <div class="sh-title">每週戰略盤點</div>
   <div class="sh-sub">填寫後儲存到本地 SQLite · 每週日同步</div>
 </div>
 """, unsafe_allow_html=True)
@@ -996,7 +1006,7 @@ with st.expander("查看歷史盤點記錄"):
 st.markdown("""
 <div class="sh">
   <div class="sh-tag">BIO-READINESS</div>
-  <div class="sh-title">🩺 個人生物備戰</div>
+  <div class="sh-title">個人生物備戰</div>
   <div class="sh-sub">COROS 自動同步 · Randall 個人數據</div>
 </div>
 """, unsafe_allow_html=True)
