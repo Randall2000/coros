@@ -18,210 +18,225 @@ st.set_page_config(
 # ── CSS ────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap');
 
 #MainMenu, header[data-testid="stHeader"], footer,
 [data-testid="stToolbar"], [data-testid="stDecoration"],
 [data-testid="manage-app-button"], .stDeployButton { display: none !important; }
 
+/* ── BENTO BOX DESIGN SYSTEM ─────────────────────────────── */
 :root {
-  --bg:      #0D1117;
-  --surf:    #161B22;
-  --s-hi:    #1C2128;
-  --s-top:   #21262D;
-  --on:      #E6EDF3;
-  --on-v:    #8B949E;
-  --out:     rgba(48,54,61,0.8);
-  --out-v:   rgba(48,54,61,0.4);
-  --r:       #58A6FF;
-  --r-bg:    rgba(88,166,255,0.10);
-  --r-bd:    rgba(88,166,255,0.22);
-  --z:       #E3B341;
-  --z-bg:    rgba(227,179,65,0.10);
-  --z-bd:    rgba(227,179,65,0.22);
-  --ok:      #E3B341;
-  --wrn:     #E3B341;
-  --err:     #F85149;
+  --bg:    #080808;
+  --s0:    #111111;
+  --s1:    #191919;
+  --s2:    #212121;
+  --on:    #F0F0F0;
+  --on-v:  rgba(240,240,240,0.38);
+  --bd:    rgba(255,255,255,0.07);
+  --r:     #00B4FF;
+  --r-bg:  rgba(0,180,255,0.10);
+  --r-bd:  rgba(0,180,255,0.28);
+  --z:     #FF7A00;
+  --z-bg:  rgba(255,122,0,0.10);
+  --z-bd:  rgba(255,122,0,0.28);
+  --ok:    #00E87D;
+  --wrn:   #FFB800;
+  --err:   #FF3B30;
+  /* legacy compat */
+  --surf:  #111111;
+  --s-hi:  #191919;
+  --s-top: #212121;
+  --out:   rgba(255,255,255,0.07);
+  --out-v: rgba(255,255,255,0.05);
 }
 
 html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: var(--bg) !important;
-  font-family: 'Roboto', system-ui, sans-serif;
-  color: var(--on); font-size: 16px; line-height: 1.5;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--on); font-size: 15px; line-height: 1.5;
 }
 .block-container { padding: 20px 16px 72px !important; max-width: 100% !important; }
 
 /* PAGE HEADER */
-.ph { padding-bottom: 14px; border-bottom: 1px solid var(--out); margin-bottom: 0; }
-.ph-title { font-size: 20px; font-weight: 400; margin: 0 0 6px; }
+.ph { padding-bottom: 16px; border-bottom: 1px solid var(--bd); margin-bottom: 0; }
+.ph-title { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; margin: 0 0 8px; color: var(--on); }
 .ph-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.chip { display: inline-flex; align-items: center; height: 26px; padding: 0 10px;
-  border: 1px solid var(--out); border-radius: 6px;
+.chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px;
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 100px;
   font-size: 12px; font-weight: 500; color: var(--on-v); }
 .chip-r { background: var(--r-bg); border-color: var(--r-bd); color: var(--r); }
-.sync-lbl { font-size: 11px; color: rgba(139,148,158,0.5); margin-left: auto; }
+.sync-lbl { font-size: 11px; color: rgba(240,240,240,0.22); margin-left: auto; }
 
 /* SECTION HEADER */
-.sh { margin: 28px 0 14px; }
-.sh-tag { font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--on-v); margin-bottom: 3px; }
-.sh-title { font-size: 20px; font-weight: 400; color: var(--on); margin: 0; }
-.sh-sub { font-size: 12px; color: var(--on-v); margin-top: 2px; }
+.sh { margin: 32px 0 16px; }
+.sh-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--on-v); margin-bottom: 4px; }
+.sh-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--on); margin: 0; }
+.sh-sub { font-size: 12px; color: var(--on-v); margin-top: 3px; }
 
-/* WAR ROOM */
-.wr { background: var(--surf); border: 1px solid var(--out);
-  border-radius: 16px; padding: 22px 24px 18px; }
+/* ── WAR ROOM (Bento hero card) ─────────────────────────── */
+.wr { background: var(--s0); border: 1px solid var(--bd);
+  border-radius: 24px; padding: 24px 24px 20px; }
+
 /* Score header */
 .wr-scores { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
 .ws-player { flex: 1; }
 .ws-player-z { text-align: right; }
-.ws-name { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.ws-name { font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 6px; }
 .ws-name-r { color: var(--r); }
 .ws-name-z { color: var(--z); }
 .ws-score { font-family: 'Roboto Mono', monospace;
-  font-size: 44px; font-weight: 400; line-height: 1; letter-spacing: -1.5px; color: var(--on); }
-.ws-unit { font-size: 15px; color: var(--on-v); font-weight: 400; }
-.ws-pct { font-size: 12px; font-weight: 500; margin-top: 5px; }
-.ws-mid { text-align: center; padding-bottom: 6px; flex-shrink: 0; }
-.ws-lead-pts { font-family: 'Roboto Mono', monospace; font-size: 26px; font-weight: 400; line-height: 1; }
-.ws-lead-lbl { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; color: var(--on-v); margin-top: 3px; }
-/* Battle (tug-of-war) bar */
-.bb-wrap { margin: 0 0 18px; }
-.bb-track { height: 18px; border-radius: 9px; overflow: hidden; position: relative; }
+  font-size: 52px; font-weight: 700; line-height: 1; letter-spacing: -2px; color: var(--on); }
+.ws-unit { font-size: 18px; color: var(--on-v); font-weight: 400; letter-spacing: 0; }
+.ws-pct { font-size: 12px; font-weight: 600; margin-top: 6px; }
+.ws-mid { text-align: center; padding-bottom: 4px; flex-shrink: 0; }
+.ws-lead-pts { font-family: 'Roboto Mono', monospace; font-size: 30px; font-weight: 700; line-height: 1; }
+.ws-lead-lbl { font-size: 10px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--on-v); margin-top: 4px; }
+
+/* Battle bar — pill shape */
+.bb-wrap { margin: 0 0 20px; }
+.bb-track { height: 22px; border-radius: 11px; overflow: hidden; position: relative;
+  background: var(--s2); }
 .bb-r { position: absolute; left: 0; top: 0; bottom: 0;
-  background: linear-gradient(90deg, rgba(88,166,255,0.5) 0%, #58A6FF 100%);
-  border-radius: 9px 0 0 9px; }
+  background: linear-gradient(90deg, rgba(0,180,255,0.4) 0%, #00B4FF 100%);
+  border-radius: 11px 0 0 11px; }
 .bb-z { position: absolute; right: 0; top: 0; bottom: 0;
-  background: linear-gradient(270deg, rgba(227,179,65,0.5) 0%, #E3B341 100%);
-  border-radius: 0 9px 9px 0; }
-.bb-mid-line { position: absolute; top: 0; bottom: 0; width: 2px;
-  background: rgba(13,17,23,0.85); left: calc(50% - 1px); }
+  background: linear-gradient(270deg, rgba(255,122,0,0.4) 0%, #FF7A00 100%);
+  border-radius: 0 11px 11px 0; }
+.bb-mid-line { position: absolute; top: 2px; bottom: 2px; width: 2px;
+  background: rgba(8,8,8,0.7); left: calc(50% - 1px); border-radius: 1px; }
 .bb-labels { display: flex; justify-content: space-between; align-items: center;
-  margin-top: 7px; font-size: 12px; }
+  margin-top: 8px; font-size: 12px; font-weight: 600; }
+
 /* Pace visual bars */
-.pv { background: var(--s-hi); border: 1px solid var(--out-v);
-  border-radius: 10px; padding: 14px 18px; }
-.pv-title { font-size: 11px; font-weight: 500; letter-spacing: 0.8px;
-  text-transform: uppercase; color: var(--on-v); margin-bottom: 12px; }
-.pv-row { display: flex; align-items: center; gap: 10px; }
-.pv-row + .pv-row { margin-top: 10px; }
-.pv-name { font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+.pv { background: var(--s1); border: 1px solid var(--bd);
+  border-radius: 16px; padding: 16px 20px; }
+.pv-title { font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--on-v); margin-bottom: 14px; }
+.pv-row { display: flex; align-items: center; gap: 12px; }
+.pv-row + .pv-row { margin-top: 12px; }
+.pv-name { font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
   text-transform: uppercase; width: 76px; flex-shrink: 0; }
-.pv-track { flex: 1; height: 8px; border-radius: 4px;
-  background: rgba(48,54,61,0.4); overflow: hidden; }
-.pv-fill { height: 100%; border-radius: 4px; }
-.pv-val { font-family: 'Roboto Mono', monospace; font-size: 13px; width: 58px;
-  text-align: right; flex-shrink: 0; }
-.dl { font-size: 12px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+.pv-track { flex: 1; height: 10px; border-radius: 5px;
+  background: var(--s2); overflow: hidden; }
+.pv-fill { height: 100%; border-radius: 5px; }
+.pv-val { font-family: 'Roboto Mono', monospace; font-size: 13px; font-weight: 500;
+  width: 58px; text-align: right; flex-shrink: 0; }
+.dl { font-size: 11px; padding: 3px 8px; border-radius: 100px; font-weight: 600; }
 .dl-r { background: var(--r-bg); color: var(--r); }
 .dl-z { background: var(--z-bg); color: var(--z); }
-.dl-n { background: rgba(48,54,61,0.4); color: var(--on-v); }
+.dl-n { background: rgba(255,255,255,0.06); color: var(--on-v); }
 
-/* CHART CARD */
-.cc { background: var(--surf); border: 1px solid var(--out-v);
-  border-radius: 12px; padding: 16px 16px 6px; }
-.cc-title { font-size: 14px; font-weight: 500; color: var(--on); margin-bottom: 2px; }
-.cc-sub { font-size: 12px; color: var(--on-v); margin-bottom: 8px; }
-.cc-stats { display: flex; padding-top: 6px; border-top: 1px solid var(--out-v); }
-.cc-stat { flex: 1; padding: 8px 12px; border-right: 1px solid var(--out-v); }
+/* CHART CARD (Bento cell) */
+.cc { background: var(--s0); border: 1px solid var(--bd);
+  border-radius: 20px; padding: 18px 18px 8px; }
+.cc-title { font-size: 14px; font-weight: 600; color: var(--on); margin-bottom: 2px; letter-spacing: -0.2px; }
+.cc-sub { font-size: 11px; color: var(--on-v); margin-bottom: 10px; }
+.cc-stats { display: flex; padding-top: 8px; border-top: 1px solid var(--bd); }
+.cc-stat { flex: 1; padding: 10px 14px; border-right: 1px solid var(--bd); }
 .cc-stat:last-child { border-right: none; }
-.cc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 17px; color: var(--on); line-height: 1; }
-.cc-stat-lbl { font-size: 11px; color: var(--on-v); margin-top: 2px; }
+.cc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 19px; font-weight: 700;
+  color: var(--on); line-height: 1; letter-spacing: -0.5px; }
+.cc-stat-lbl { font-size: 11px; color: var(--on-v); margin-top: 3px; }
 
-/* EQUIPMENT CARD */
-.eq { background: var(--surf); border: 1px solid var(--out-v);
-  border-radius: 12px; padding: 18px 22px;
-  display: flex; flex-direction: column; gap: 14px; }
+/* EQUIPMENT CARD (Bento cell) */
+.eq { background: var(--s0); border: 1px solid var(--bd);
+  border-radius: 20px; padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 16px; }
 .eq-row { display: flex; align-items: center; gap: 14px; }
-.eq-ico { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 18px; }
-.eq-lbl { font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+.eq-ico { width: 42px; height: 42px; border-radius: 14px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.eq-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1px;
   text-transform: uppercase; color: var(--on-v); }
 .eq-val { font-family: 'Roboto Mono', monospace;
-  font-size: 26px; font-weight: 400; color: var(--on); line-height: 1; }
-.eq-foot { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
-.progtrack { height: 4px; border-radius: 2px; background: rgba(48,54,61,0.6); overflow: hidden; }
-.progfill { height: 100%; border-radius: 2px; }
-.gap-row { display: flex; gap: 8px; }
-.gap-item { flex: 1; padding: 10px 14px; border-radius: 8px;
-  background: var(--s-hi); border: 1px solid var(--out-v); }
-.gap-who { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-.gap-val { font-family: 'Roboto Mono', monospace; font-size: 17px; color: var(--on); line-height: 1.3; }
-.gap-sub { font-size: 11px; color: var(--on-v); }
+  font-size: 30px; font-weight: 700; color: var(--on); line-height: 1; letter-spacing: -1px; }
+.eq-foot { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+.progtrack { height: 6px; border-radius: 3px; background: var(--s2); overflow: hidden; }
+.progfill { height: 100%; border-radius: 3px; }
+.gap-row { display: flex; gap: 10px; }
+.gap-item { flex: 1; padding: 12px 14px; border-radius: 14px;
+  background: var(--s1); border: 1px solid var(--bd); }
+.gap-who { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.gap-val { font-family: 'Roboto Mono', monospace; font-size: 20px; font-weight: 700;
+  color: var(--on); line-height: 1.3; letter-spacing: -0.5px; }
+.gap-sub { font-size: 11px; color: var(--on-v); margin-top: 2px; }
 
-/* BIO METRIC TILE */
-.mt { background: var(--surf); border-radius: 10px;
-  border: 1px solid var(--out-v); border-top: 2px solid;
-  padding: 10px 14px 8px; display: flex; flex-direction: column; gap: 5px; }
+/* BIO METRIC TILE (Bento mini cell) */
+.mt { background: var(--s0); border-radius: 20px;
+  border: 1px solid var(--bd); border-top: 3px solid;
+  padding: 14px 16px 12px; display: flex; flex-direction: column; gap: 6px; }
 .mt-top { display: flex; align-items: center; justify-content: space-between; }
-.mt-cat { font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+.mt-cat { font-size: 10px; font-weight: 700; letter-spacing: 1px;
   text-transform: uppercase; color: var(--on-v); }
-.mt-ico { width: 24px; height: 24px; border-radius: 6px;
+.mt-ico { width: 26px; height: 26px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center; }
 .mt-num { font-family: 'Roboto Mono', monospace;
-  font-size: 24px; font-weight: 400; color: var(--on);
-  letter-spacing: -0.5px; line-height: 1; }
+  font-size: 32px; font-weight: 700; color: var(--on);
+  letter-spacing: -1px; line-height: 1; }
 .mt-foot { display: flex; align-items: center; gap: 6px; }
-.sb { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; }
-.sb-ok   { background: rgba(227,179,65,0.14);  color: #E3B341; }
-.sb-med  { background: rgba(227,179,65,0.14);   color: #E3B341; }
-.sb-bad  { background: rgba(248,81,73,0.14);  color: #F85149; }
-.sb-info { background: rgba(121,192,255,0.14);  color: #79C0FF; }
-.mt-ctx { font-size: 11px; color: var(--on-v); opacity: 0.7; }
+.sb { font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 3px 10px; border-radius: 100px; }
+.sb-ok   { background: rgba(0,232,125,0.15);  color: #00E87D; }
+.sb-med  { background: rgba(255,184,0,0.15);   color: #FFB800; }
+.sb-bad  { background: rgba(255,59,48,0.15);  color: #FF3B30; }
+.sb-info { background: rgba(0,180,255,0.12);  color: #00B4FF; }
+.mt-ctx { font-size: 11px; color: var(--on-v); }
 
 /* ACTIVITY TABLE */
 .at { width: 100%; border-collapse: collapse; }
-.at th { font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+.at th { font-size: 10px; font-weight: 700; letter-spacing: 1px;
   text-transform: uppercase; color: var(--on-v);
-  padding: 0 14px 10px; text-align: left; border-bottom: 1px solid var(--out-v); }
+  padding: 0 14px 12px; text-align: left; border-bottom: 1px solid var(--bd); }
 .at th:first-child { padding-left: 18px; }
-.at td { font-size: 13px; color: var(--on); padding: 9px 14px;
-  border-bottom: 1px solid var(--out-v); vertical-align: middle; }
+.at td { font-size: 13px; color: var(--on); padding: 10px 14px;
+  border-bottom: 1px solid var(--bd); vertical-align: middle; }
 .at td:first-child { padding-left: 18px; }
 .at tr:last-child td { border-bottom: none; }
 .al { display: inline-flex; align-items: center;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 3px; }
-.al-s { background: rgba(88,166,255,0.12); color: #58A6FF; }
-.al-r { background: rgba(227,179,65,0.12); color: #E3B341; }
-.al-o { background: rgba(48,54,61,0.5); color: #8B949E; }
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 3px 9px; border-radius: 100px; }
+.al-s { background: var(--r-bg); color: var(--r); }
+.al-r { background: var(--z-bg); color: var(--z); }
+.al-o { background: rgba(255,255,255,0.06); color: var(--on-v); }
 
 /* SIM BADGE */
 .sim { display: inline-flex; align-items: center;
-  font-size: 11px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
-  background: rgba(227,179,65,0.12); color: #E3B341; margin-left: 8px; }
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+  background: rgba(255,184,0,0.12); color: #FFB800; margin-left: 8px; }
 
 /* STRAVA CONNECT */
-.sc { background: var(--surf); border: 1px solid var(--out-v);
-  border-radius: 14px; padding: 22px 24px; }
+.sc { background: var(--s0); border: 1px solid var(--bd);
+  border-radius: 20px; padding: 22px 22px; }
 .sc-row { display: flex; align-items: center; gap: 16px; }
-.sc-avatar { width: 44px; height: 44px; border-radius: 22px;
+.sc-avatar { width: 46px; height: 46px; border-radius: 23px;
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; flex-shrink: 0; }
-.sc-name { font-size: 13px; font-weight: 500; color: var(--on); }
+.sc-name { font-size: 14px; font-weight: 600; color: var(--on); letter-spacing: -0.2px; }
 .sc-meta { font-size: 11px; color: var(--on-v); margin-top: 2px; }
-.sc-stat-row { display: flex; gap: 0; margin-top: 16px; border: 1px solid var(--out-v);
-  border-radius: 10px; overflow: hidden; }
-.sc-stat { flex: 1; padding: 10px 14px; border-right: 1px solid var(--out-v); }
+.sc-stat-row { display: flex; gap: 0; margin-top: 16px; border: 1px solid var(--bd);
+  border-radius: 14px; overflow: hidden; background: var(--s1); }
+.sc-stat { flex: 1; padding: 12px 14px; border-right: 1px solid var(--bd); }
 .sc-stat:last-child { border-right: none; }
-.sc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 16px; color: var(--on); }
-.sc-stat-lbl { font-size: 11px; color: var(--on-v); margin-top: 1px; }
+.sc-stat-val { font-family: 'Roboto Mono', monospace; font-size: 17px; font-weight: 700;
+  color: var(--on); letter-spacing: -0.5px; }
+.sc-stat-lbl { font-size: 11px; color: var(--on-v); margin-top: 2px; }
 
 /* Streamlit overrides */
-[data-testid="stExpander"] { background: var(--surf) !important;
-  border: 1px solid var(--out-v) !important; border-radius: 12px !important; }
+[data-testid="stExpander"] { background: var(--s0) !important;
+  border: 1px solid var(--bd) !important; border-radius: 16px !important; }
 [data-testid="stExpander"] summary { color: var(--on-v) !important; }
 .stButton > button[kind="primary"] {
-  background: #58A6FF !important; color: #0D1117 !important;
-  border: none !important; border-radius: 20px !important;
-  font-weight: 500 !important; font-size: 14px !important; height: 40px !important; }
+  background: var(--r) !important; color: #080808 !important;
+  border: none !important; border-radius: 100px !important;
+  font-weight: 700 !important; font-size: 14px !important; height: 42px !important;
+  letter-spacing: 0.3px !important; }
 
-/* ── MOBILE FIRST ──────────────────────────────────────────── */
+/* ── MOBILE (≤ 640px) ────────────────────────────────────── */
 @media (max-width: 640px) {
-  /* Stack all st.columns() vertically */
-  [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 8px !important; }
+  [data-testid="stHorizontalBlock"] { flex-wrap: wrap !important; gap: 10px !important; }
   [data-testid="column"] { min-width: 100% !important; flex: 1 1 100% !important; }
-
-  /* Global minimum: any text smaller than 20px on mobile is an error */
   html, body, .stApp, [data-testid="stAppViewContainer"] { font-size: 20px !important; }
 
   /* Page header */
@@ -230,47 +245,45 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   .sync-lbl  { font-size: 20px; }
 
   /* Section header */
-  .sh       { margin: 24px 0 14px; }
-  .sh-tag   { font-size: 20px; letter-spacing: 1px; }
-  .sh-title { font-size: 24px; }
-  .sh-sub   { font-size: 20px; }
+  .sh        { margin: 26px 0 14px; }
+  .sh-tag    { font-size: 20px; }
+  .sh-title  { font-size: 26px; }
+  .sh-sub    { font-size: 20px; }
 
   /* Card padding */
-  .wr { padding: 18px 16px 16px; border-radius: 14px; }
-  .sc { padding: 18px 16px; border-radius: 12px; }
-  .cc { padding: 16px 14px 8px; }
-  .eq { padding: 16px 16px; gap: 14px; }
-  .mt { padding: 14px 14px 12px; }
+  .wr { padding: 14px 12px 12px; border-radius: 20px; }
+  .sc { padding: 18px 16px; border-radius: 18px; }
+  .cc { padding: 16px 14px 8px; border-radius: 18px; }
+  .eq { padding: 16px 16px; gap: 14px; border-radius: 18px; }
+  .mt { padding: 14px 14px 12px; border-radius: 18px; }
 
-  /* WAR ROOM - 3-column horizontal layout on mobile */
-  .wr          { padding: 14px 12px 12px; }
+  /* WAR ROOM - 3-column horizontal, no wrap */
   .wr-scores   { flex-direction: row; align-items: flex-end;
                  justify-content: space-between; margin-bottom: 14px; flex-wrap: nowrap; }
   .ws-player   { flex: 1; min-width: 0; }
   .ws-player-z { text-align: right; }
-  .ws-name     { font-size: 10px; letter-spacing: 0.5px; margin-bottom: 4px;
+  .ws-name     { font-size: 10px; margin-bottom: 4px;
                  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ws-score    { font-size: 26px !important; letter-spacing: -1px; line-height: 1;
-                 white-space: nowrap; }
-  .ws-unit     { font-size: 12px; }
+  .ws-score    { font-size: 28px !important; letter-spacing: -1px; white-space: nowrap; }
+  .ws-unit     { font-size: 13px; }
   .ws-pct      { font-size: 11px; margin-top: 3px; white-space: nowrap; }
   .ws-mid      { flex-shrink: 0; padding: 0 6px; text-align: center; }
-  .ws-lead-pts { font-size: 22px !important; white-space: nowrap; }
+  .ws-lead-pts { font-size: 24px !important; white-space: nowrap; }
   .ws-lead-lbl { font-size: 10px; white-space: nowrap; }
 
-  /* Battle bar labels */
-  .bb-labels  { font-size: 20px; margin-top: 10px; }
-  .bb-track   { height: 22px; border-radius: 11px; }
+  /* Battle bar */
+  .bb-labels { font-size: 20px; margin-top: 10px; }
+  .bb-track  { height: 22px; border-radius: 11px; }
 
-  /* Pace section */
-  .pv         { padding: 16px 16px; }
-  .pv-title   { font-size: 20px; margin-bottom: 16px; }
-  .pv-row     { gap: 10px; }
+  /* Pace */
+  .pv        { padding: 16px 16px; border-radius: 14px; }
+  .pv-title  { font-size: 20px; margin-bottom: 16px; }
+  .pv-row    { gap: 10px; }
   .pv-row + .pv-row { margin-top: 14px; }
-  .pv-name    { font-size: 20px; width: 90px; }
-  .pv-track   { height: 10px; border-radius: 5px; }
-  .pv-val     { font-size: 20px; width: 64px; }
-  .dl         { font-size: 20px; padding: 4px 10px; }
+  .pv-name   { font-size: 20px; width: 90px; }
+  .pv-track  { height: 10px; border-radius: 5px; }
+  .pv-val    { font-size: 20px; width: 64px; }
+  .dl        { font-size: 20px; padding: 4px 10px; }
 
   /* Chart card */
   .cc-title    { font-size: 20px; }
@@ -279,17 +292,17 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   .cc-stat-lbl { font-size: 20px; }
   .cc-stat     { padding: 10px 12px; }
 
-  /* Equipment card */
+  /* Equipment */
   .eq-lbl { font-size: 20px; }
   .eq-val { font-size: 28px; }
   .gap-who { font-size: 20px; }
   .gap-val { font-size: 22px; }
   .gap-sub { font-size: 20px; }
 
-  /* Bio metric tile */
+  /* Bio tiles */
   .mt-cat { font-size: 20px; }
-  .mt-num { font-size: 26px; }
-  .sb     { font-size: 20px; padding: 3px 8px; }
+  .mt-num { font-size: 30px; }
+  .sb     { font-size: 20px; padding: 4px 10px; }
   .mt-ctx { font-size: 20px; }
 
   /* Activity table */
@@ -298,7 +311,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   .al     { font-size: 20px; padding: 4px 10px; }
   .sim    { font-size: 20px; padding: 3px 8px; }
 
-  /* Stats card (athlete summary) */
+  /* Athlete summary card */
   .sc-name    { font-size: 20px; }
   .sc-meta    { font-size: 20px; }
   .sc-stat-row { flex-wrap: wrap; }
@@ -306,23 +319,20 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   .sc-stat-val { font-size: 22px; }
   .sc-stat-lbl { font-size: 20px; margin-top: 4px; }
 
-  /* Touch-friendly form inputs */
+  /* Form inputs */
   [data-testid="stNumberInput"] input,
   [data-testid="stTextInput"] input,
   [data-testid="stSelectbox"] select,
   [data-testid="stDateInput"] input { min-height: 52px !important; font-size: 20px !important; }
 
-  /* Expander touch target */
   [data-testid="stExpander"] summary { min-height: 52px !important; display: flex !important;
     align-items: center !important; font-size: 20px !important; }
 
-  /* Chart overflow guard */
   [data-testid="stVegaLiteChart"], [data-testid="stArrowVegaLiteChart"],
   [data-testid="stPlotlyChart"] { max-width: 100% !important; overflow-x: hidden !important; }
 
-  /* Submit button - full width, taller */
   .stButton > button[kind="primary"] { height: 52px !important; font-size: 20px !important;
-    width: 100% !important; border-radius: 14px !important; }
+    width: 100% !important; border-radius: 100px !important; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -612,12 +622,12 @@ z_cum     = df_sim["Zoe 負荷"].cumsum().tolist()
 def chart_base(reverse_y=False):
     base = dict(
         plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Roboto,system-ui", color="#8B949E", size=11),
+        font=dict(family="Inter,system-ui", color="rgba(240,240,240,0.38)", size=11),
         xaxis=dict(showgrid=False, zeroline=False,
-                   tickfont=dict(color="rgba(139,148,158,0.7)", size=11),
-                   linecolor="rgba(48,54,61,0.6)"),
-        yaxis=dict(showgrid=True, gridcolor="rgba(48,54,61,0.35)", zeroline=False,
-                   tickfont=dict(color="rgba(139,148,158,0.7)", size=11)),
+                   tickfont=dict(color="rgba(240,240,240,0.30)", size=11),
+                   linecolor="rgba(255,255,255,0.06)"),
+        yaxis=dict(showgrid=True, gridcolor="rgba(255,255,255,0.05)", zeroline=False,
+                   tickfont=dict(color="rgba(240,240,240,0.30)", size=11)),
         legend=dict(orientation="h", yanchor="bottom", y=1.04, xanchor="right", x=1,
                     font=dict(size=11, color="#8B949E"), bgcolor="rgba(0,0,0,0)"),
         margin=dict(l=8, r=8, t=36, b=8),
@@ -666,9 +676,9 @@ z_pct   = 100 - r_pct
 if abs(lead_diff) < 3:
     lp_color, lp_pts_str, lp_who = "#8B949E", "TIE", "勢均力敵"
 elif lead_diff > 0:
-    lp_color, lp_pts_str, lp_who = "#58A6FF", f"+{lead_diff}", "RANDALL 領先"
+    lp_color, lp_pts_str, lp_who = "#00B4FF", f"+{lead_diff}", "RANDALL 領先"
 else:
-    lp_color, lp_pts_str, lp_who = "#E3B341", f"+{abs(lead_diff)}", "ZOE 領先"
+    lp_color, lp_pts_str, lp_who = "#FF7A00", f"+{abs(lead_diff)}", "ZOE 領先"
 
 # Pace visual bar (lower = faster; scale to 8.0 min/km max)
 _pace_scale = 8.0
@@ -688,7 +698,7 @@ st.markdown(f"""
     <div class="ws-player">
       <div class="ws-name ws-name-r">⚡ RANDALL · COROS</div>
       <div class="ws-score">{r_total}<span class="ws-unit"> pts</span></div>
-      <div class="ws-pct" style="color:#58A6FF">{r_pct}% 本週份額</div>
+      <div class="ws-pct" style="color:#00B4FF">{r_pct}% 本週份額</div>
     </div>
     <div class="ws-mid">
       <div class="ws-lead-lbl">{lp_who}</div>
@@ -697,11 +707,11 @@ st.markdown(f"""
     <div class="ws-player ws-player-z">
       <div class="ws-name ws-name-z">★ ZOE · 手動輸入</div>
       <div class="ws-score">{z_total}<span class="ws-unit"> pts</span></div>
-      <div class="ws-pct" style="color:#E3B341">{z_pct}% 本週份額</div>
+      <div class="ws-pct" style="color:#FF7A00">{z_pct}% 本週份額</div>
     </div>
   </div>
   <!-- Scoring formula -->
-  <div style="background:rgba(22,27,34,0.6);border:1px solid rgba(48,54,61,0.6);border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:12px;color:#8B949E">
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:10px 16px;margin-bottom:18px;font-size:11px;font-weight:600;letter-spacing:0.3px;color:rgba(240,240,240,0.38)">
     📐 積分公式：跑步 TL × 1.5 ＋ 肌力 TL × 1.2
   </div>
   <!-- Tug-of-war battle bar -->
@@ -712,28 +722,28 @@ st.markdown(f"""
       <div class="bb-mid-line"></div>
     </div>
     <div class="bb-labels">
-      <span style="color:#58A6FF">⚡ {r_pct}%</span>
+      <span style="color:#00B4FF">⚡ {r_pct}%</span>
       <span style="color:rgba(139,148,158,0.5)">｜ 50% 均衡點 ｜</span>
-      <span style="color:#E3B341">{z_pct}% ★</span>
+      <span style="color:#FF7A00">{z_pct}% ★</span>
     </div>
   </div>
   <!-- Zone 2 pace visual bars -->
   <div class="pv">
     <div class="pv-title">Zone 2 配速對比 <span style="font-weight:400;opacity:0.6">min/km · 條越短越快</span></div>
     <div class="pv-row">
-      <div class="pv-name" style="color:#58A6FF">⚡ Randall</div>
+      <div class="pv-name" style="color:#00B4FF">⚡ Randall</div>
       <div class="pv-track">
-        <div class="pv-fill" style="width:{r_bar}%;background:#58A6FF"></div>
+        <div class="pv-fill" style="width:{r_bar}%;background:#00B4FF"></div>
       </div>
-      <div class="pv-val" style="color:#58A6FF">{r_pace}</div>
+      <div class="pv-val" style="color:#00B4FF">{r_pace}</div>
       <span class="dl {r_pace_dl}">{r_pace_tag}</span>
     </div>
     <div class="pv-row">
-      <div class="pv-name" style="color:#E3B341">★ Zoe</div>
+      <div class="pv-name" style="color:#FF7A00">★ Zoe</div>
       <div class="pv-track">
-        <div class="pv-fill" style="width:{z_bar}%;background:#E3B341"></div>
+        <div class="pv-fill" style="width:{z_bar}%;background:#FF7A00"></div>
       </div>
-      <div class="pv-val" style="color:#E3B341">{z_pace}</div>
+      <div class="pv-val" style="color:#FF7A00">{z_pace}</div>
       <span class="dl {z_pace_dl}">{z_pace_tag}</span>
     </div>
   </div>
@@ -754,8 +764,8 @@ with cl:
     st.markdown('<div class="cc"><div class="cc-title">訓練負荷</div><div class="cc-sub">Training Load · RANDALL vs ZOE</div>', unsafe_allow_html=True)
     fig = go.Figure()
     for name, col, color, fill in [
-        ("⚡ Randall", "Randall 負荷", "#58A6FF", "rgba(88,166,255,0.10)"),
-        ("★ Zoe",     "Zoe 負荷",    "#E3B341", "rgba(227,179,65,0.08)"),
+        ("⚡ Randall", "Randall 負荷", "#00B4FF", "rgba(88,166,255,0.10)"),
+        ("★ Zoe",     "Zoe 負荷",    "#FF7A00", "rgba(227,179,65,0.08)"),
     ]:
         fig.add_trace(go.Scatter(
             x=df_sim["日期"], y=df_sim[col], name=name, mode="lines+markers",
@@ -771,11 +781,11 @@ with cl:
     st.markdown(f"""
     <div class="cc-stats">
       <div class="cc-stat">
-        <div class="cc-stat-val" style="color:#58A6FF">{r_total}</div>
+        <div class="cc-stat-val" style="color:#00B4FF">{r_total}</div>
         <div class="cc-stat-lbl">⚡ Randall 本週</div>
       </div>
       <div class="cc-stat">
-        <div class="cc-stat-val" style="color:#E3B341">{z_total}</div>
+        <div class="cc-stat-val" style="color:#FF7A00">{z_total}</div>
         <div class="cc-stat-lbl">★ Zoe 本週</div>
       </div>
       <div class="cc-stat">
@@ -791,8 +801,8 @@ with cr:
     st.markdown('<div class="cc"><div class="cc-title">Zone 2 配速</div><div class="cc-sub">min/km · 數值越小代表越快</div>', unsafe_allow_html=True)
     fig2 = go.Figure()
     for name, col, color, fill in [
-        ("⚡ Randall", "Randall 配速", "#58A6FF", "rgba(88,166,255,0.10)"),
-        ("★ Zoe",     "Zoe 配速",    "#E3B341", "rgba(227,179,65,0.08)"),
+        ("⚡ Randall", "Randall 配速", "#00B4FF", "rgba(88,166,255,0.10)"),
+        ("★ Zoe",     "Zoe 配速",    "#FF7A00", "rgba(227,179,65,0.08)"),
     ]:
         fig2.add_trace(go.Scatter(
             x=df_sim["日期"], y=df_sim[col], name=name, mode="lines+markers",
@@ -806,11 +816,11 @@ with cr:
     st.markdown(f"""
     <div class="cc-stats">
       <div class="cc-stat">
-        <div class="cc-stat-val" style="color:#58A6FF">{r_pace}</div>
+        <div class="cc-stat-val" style="color:#00B4FF">{r_pace}</div>
         <div class="cc-stat-lbl">⚡ Randall 平均</div>
       </div>
       <div class="cc-stat">
-        <div class="cc-stat-val" style="color:#E3B341">{z_pace}</div>
+        <div class="cc-stat-val" style="color:#FF7A00">{z_pace}</div>
         <div class="cc-stat-lbl">★ Zoe 平均</div>
       </div>
       <div class="cc-stat">
@@ -823,8 +833,8 @@ with cr:
 st.markdown('<div class="cc" style="margin-top:12px"><div class="cc-title">累積訓練量趨勢</div><div class="cc-sub">Cumulative Load · 過去 7 天</div>', unsafe_allow_html=True)
 fig_cum = go.Figure()
 for _name, _y, _color, _fill in [
-    ("⚡ Randall", r_cum, "#58A6FF", "rgba(88,166,255,0.10)"),
-    ("★ Zoe",     z_cum, "#E3B341", "rgba(227,179,65,0.08)"),
+    ("⚡ Randall", r_cum, "#00B4FF", "rgba(88,166,255,0.10)"),
+    ("★ Zoe",     z_cum, "#FF7A00", "rgba(227,179,65,0.08)"),
 ]:
     fig_cum.add_trace(go.Scatter(
         x=df_sim["日期"], y=_y, name=_name, mode="lines+markers",
@@ -838,11 +848,11 @@ st.plotly_chart(fig_cum, use_container_width=True)
 st.markdown(f"""
 <div class="cc-stats">
   <div class="cc-stat">
-    <div class="cc-stat-val" style="color:#58A6FF">{r_cum[-1]}</div>
+    <div class="cc-stat-val" style="color:#00B4FF">{r_cum[-1]}</div>
     <div class="cc-stat-lbl">⚡ Randall 7 天累積</div>
   </div>
   <div class="cc-stat">
-    <div class="cc-stat-val" style="color:#E3B341">{z_cum[-1]}</div>
+    <div class="cc-stat-val" style="color:#FF7A00">{z_cum[-1]}</div>
     <div class="cc-stat-lbl">★ Zoe 7 天累積</div>
   </div>
   <div class="cc-stat">
@@ -877,16 +887,16 @@ with eq1:
         </div>
       </div>
       <div class="progtrack">
-        <div class="progfill" style="width:100%;background:#E3B341"></div>
+        <div class="progfill" style="width:100%;background:#FF7A00"></div>
       </div>
       <div class="gap-row">
         <div class="gap-item">
-          <div class="gap-who" style="color:#58A6FF">⚡ Randall</div>
+          <div class="gap-who" style="color:#00B4FF">⚡ Randall</div>
           <div class="gap-val">102 kg</div>
           <div class="gap-sub">上次測試</div>
         </div>
         <div class="gap-item">
-          <div class="gap-who" style="color:#E3B341">★ Zoe</div>
+          <div class="gap-who" style="color:#FF7A00">★ Zoe</div>
           <div class="gap-val">105 kg</div>
           <div class="gap-sub">上次測試 ↑ +3</div>
         </div>
@@ -911,16 +921,16 @@ with eq2:
         </div>
       </div>
       <div class="progtrack">
-        <div class="progfill" style="width:{wb_pct}%;background:#F85149"></div>
+        <div class="progfill" style="width:{wb_pct}%;background:#FF3B30"></div>
       </div>
       <div class="gap-row">
         <div class="gap-item">
-          <div class="gap-who" style="color:#58A6FF">⚡ Randall</div>
+          <div class="gap-who" style="color:#00B4FF">⚡ Randall</div>
           <div class="gap-val">{wb_cur} 下</div>
           <div class="gap-sub">最新測試</div>
         </div>
         <div class="gap-item">
-          <div class="gap-who" style="color:#E3B341">★ Zoe</div>
+          <div class="gap-who" style="color:#FF7A00">★ Zoe</div>
           <div class="gap-val">— 下</div>
           <div class="gap-sub">待測試</div>
         </div>
@@ -934,9 +944,9 @@ _r_scores   = [100, wb_pct]
 fig_eq = go.Figure()
 fig_eq.add_trace(go.Bar(
     name="⚡ Randall", x=_eq_items, y=_r_scores,
-    marker=dict(color="#58A6FF", opacity=0.82, line=dict(width=0)),
+    marker=dict(color="#00B4FF", opacity=0.82, line=dict(width=0)),
     text=[f"{v}%" for v in _r_scores], textposition="outside",
-    textfont=dict(color="#58A6FF", size=11),
+    textfont=dict(color="#00B4FF", size=11),
 ))
 _eq_layout = chart_base()
 _eq_layout["barmode"] = "group"
@@ -946,7 +956,7 @@ fig_eq.update_layout(**_eq_layout)
 fig_eq.add_shape(type="line", x0=-0.5, x1=1.5, y0=100, y1=100,
                   line=dict(color="rgba(227,179,65,0.55)", width=1.5, dash="dash"))
 fig_eq.add_annotation(x=1.5, y=100, text="目標 100%", showarrow=False,
-                       xanchor="left", font=dict(color="#E3B341", size=10))
+                       xanchor="left", font=dict(color="#FF7A00", size=10))
 st.plotly_chart(fig_eq, use_container_width=True)
 
 # ── 5  MISSION DEBRIEF ─────────────────────────────────────────────────────────
@@ -1026,13 +1036,13 @@ ICON_SVG = {
 }
 
 TILES = [
-    ("recovery","恢復狀態","#58A6FF","rgba(88,166,255,0.10)",
+    ("recovery","恢復狀態","#00B4FF","rgba(88,166,255,0.10)",
      health["recovery"], r_cls, r_lbl, health["recovery_level"] or "COROS"),
-    ("sleep","睡眠評分","#E3B341","rgba(227,179,65,0.10)",
+    ("sleep","睡眠評分","#FF7A00","rgba(227,179,65,0.10)",
      health["sleep_score"], s_cls, s_lbl, health["sleep_dur"] or "今晚"),
-    ("hr","靜止心率","#79C0FF","rgba(121,192,255,0.10)",
+    ("hr","靜止心率","#00B4FF","rgba(121,192,255,0.10)",
      health["hr"]+" bpm" if health["hr"]!="—" else "—", h_cls, h_lbl, "今日"),
-    ("stress","壓力指數","#E3B341","rgba(227,179,65,0.10)",
+    ("stress","壓力指數","#FF7A00","rgba(227,179,65,0.10)",
      health["stress"], st_cls, st_lbl, health["stress_label"] or "—"),
 ]
 
@@ -1071,7 +1081,7 @@ with bio_r_col:
         theta=_radar_cats + [_radar_cats[0]],
         fill="toself",
         fillcolor="rgba(88,166,255,0.12)",
-        line=dict(color="#58A6FF", width=2.5),
+        line=dict(color="#00B4FF", width=2.5),
         name="Randall",
         hovertemplate="%{theta}: %{r}",
     ))
@@ -1104,9 +1114,9 @@ with bio_desc_col:
     st.markdown(f"""
     <div style="padding:16px 8px">
       <div style="font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#8B949E;margin-bottom:12px">生物指標總覽</div>
-      {''.join([f'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(48,54,61,0.4)"><span style="font-size:12px;color:#8B949E">{c}</span><div style="display:flex;align-items:center;gap:8px"><div style="width:60px;height:5px;border-radius:3px;background:rgba(48,54,61,0.4);overflow:hidden"><div style="width:{v}%;height:100%;background:#58A6FF;border-radius:3px"></div></div><span style="font-family:\'Roboto Mono\',monospace;font-size:13px;color:#58A6FF;width:28px;text-align:right">{v}</span></div></div>' for c,v in zip(_radar_cats,_radar_vals)])}
+      {''.join([f'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(48,54,61,0.4)"><span style="font-size:12px;color:#8B949E">{c}</span><div style="display:flex;align-items:center;gap:8px"><div style="width:60px;height:5px;border-radius:3px;background:rgba(48,54,61,0.4);overflow:hidden"><div style="width:{v}%;height:100%;background:#00B4FF;border-radius:3px"></div></div><span style="font-family:\'Roboto Mono\',monospace;font-size:13px;color:#00B4FF;width:28px;text-align:right">{v}</span></div></div>' for c,v in zip(_radar_cats,_radar_vals)])}
       <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
-        <span style="font-family:\'Roboto Mono\',monospace;font-size:30px;color:#58A6FF;font-weight:400">{_bio_overall}</span>
+        <span style="font-family:\'Roboto Mono\',monospace;font-size:30px;color:#00B4FF;font-weight:400">{_bio_overall}</span>
         <div><span class="sb {_bio_grade[0]}" style="display:inline-block;margin-bottom:4px">{_bio_grade[1]}</span><div style="font-size:10px;color:rgba(139,148,158,0.6)">綜合生物指數 / 100</div></div>
       </div>
     </div>""", unsafe_allow_html=True)
@@ -1122,7 +1132,7 @@ st.markdown("""
 
 if _zoe_has_real:
     _src_badge = "✓ 手動輸入" if _zoe_is_manual else "✓ 真實數據"
-    _src_color = "#E3B341"
+    _src_color = "#FF7A00"
     _src_label = f"Zoe · {_zoe_source_lbl}"
     _src_meta  = f"最後更新：{zoe['updated']}"
     st.markdown(f"""
@@ -1137,11 +1147,11 @@ if _zoe_has_real:
       </div>
       <div class="sc-stat-row">
         <div class="sc-stat">
-          <div class="sc-stat-val" style="color:#E3B341">{zoe['count']}</div>
+          <div class="sc-stat-val" style="color:#FF7A00">{zoe['count']}</div>
           <div class="sc-stat-lbl">近 7 天活動</div>
         </div>
         <div class="sc-stat">
-          <div class="sc-stat-val" style="color:#E3B341">{zoe['total_load']}</div>
+          <div class="sc-stat-val" style="color:#FF7A00">{zoe['total_load']}</div>
           <div class="sc-stat-lbl">7 天總負荷</div>
         </div>
         <div class="sc-stat">
@@ -1163,12 +1173,12 @@ if _zoe_has_real:
                 _hr = f"{_a['avg_hr']} bpm" if _a.get("avg_hr") else "—"
                 _rows += f"""<tr>
                   <td style="color:#8B949E;font-size:12px">{_a.get('date','')}</td>
-                  <td><span style="color:#E3B341;font-weight:500">{str(_a.get('name',''))[:20]}</span></td>
+                  <td><span style="color:#FF7A00;font-weight:500">{str(_a.get('name',''))[:20]}</span></td>
                   <td><span style="color:#8B949E;font-size:12px">{_a.get('sport','')}</span></td>
                   <td>{_km}</td>
                   <td>{_a.get('avg_pace','—')}</td>
                   <td>{_hr}</td>
-                  <td style="color:#E3B341">{_a.get('training_load','—')}</td>
+                  <td style="color:#FF7A00">{_a.get('training_load','—')}</td>
                 </tr>"""
             st.markdown(f"""
             <table class="at">
