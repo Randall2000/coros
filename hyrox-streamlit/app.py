@@ -87,6 +87,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   text-transform: uppercase; margin-bottom: 6px; }
 .ws-name-r { color: var(--r); }
 .ws-name-z { color: var(--z); }
+.ws-name-suffix { display: inline; }
 .ws-score { font-family: 'Barlow Condensed', system-ui, sans-serif;
   font-size: 58px; font-weight: 800; line-height: 1; letter-spacing: -1px; color: var(--on); }
 .ws-unit { font-size: 18px; color: var(--on-v); font-weight: 500; letter-spacing: 0; }
@@ -272,8 +273,8 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
                  justify-content: space-between; margin-bottom: 14px; flex-wrap: nowrap; }
   .ws-player   { flex: 1; min-width: 0; }
   .ws-player-z { text-align: right; }
-  .ws-name     { font-size: 10px; margin-bottom: 4px;
-                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ws-name     { font-size: 10px; margin-bottom: 4px; white-space: nowrap; }
+  .ws-name-suffix { display: none; }
   .ws-score    { font-size: 28px !important; letter-spacing: -1px; white-space: nowrap; }
   .ws-unit     { font-size: 13px; }
   .ws-pct      { font-size: 11px; margin-top: 3px; white-space: nowrap; }
@@ -692,13 +693,29 @@ else:
 
 # Pace visual bar (lower = faster; scale to 8.0 min/km max)
 _pace_scale = 8.0
-r_bar = round(r_pace / _pace_scale * 100)
-z_bar = round(z_pace / _pace_scale * 100)
-r_faster = r_pace < z_pace
-r_pace_dl = "dl-r" if r_faster else "dl-n"
-z_pace_dl = "dl-z" if not r_faster else "dl-n"
-r_pace_tag = "✓ 較快" if r_faster else f"▲ +{round(r_pace-z_pace,2)}"
-z_pace_tag = "✓ 較快" if not r_faster else f"▲ +{round(z_pace-r_pace,2)}"
+r_has_pace  = r_pace > 0
+z_has_pace  = z_pace > 0
+r_bar = round(r_pace / _pace_scale * 100) if r_has_pace else 0
+z_bar = round(z_pace / _pace_scale * 100) if z_has_pace else 0
+
+if not r_has_pace and not z_has_pace:
+    r_faster = False
+    r_pace_dl, z_pace_dl = "dl-n", "dl-n"
+    r_pace_tag, z_pace_tag = "無記錄", "無記錄"
+elif not r_has_pace:
+    r_faster = False
+    r_pace_dl, z_pace_dl = "dl-n", "dl-z"
+    r_pace_tag, z_pace_tag = "無記錄", "✓ 較快"
+elif not z_has_pace:
+    r_faster = True
+    r_pace_dl, z_pace_dl = "dl-r", "dl-n"
+    r_pace_tag, z_pace_tag = "✓ 較快", "無記錄"
+else:
+    r_faster = r_pace < z_pace
+    r_pace_dl = "dl-r" if r_faster else "dl-n"
+    z_pace_dl = "dl-z" if not r_faster else "dl-n"
+    r_pace_tag = "✓ 較快" if r_faster else f"▲ +{round(r_pace - z_pace, 2)}"
+    z_pace_tag = "✓ 較快" if not r_faster else f"▲ +{round(z_pace - r_pace, 2)}"
 
 # Battle bar background = Zoe's colour (blue), Randall fills from left (purple)
 st.markdown(f"""
@@ -706,7 +723,7 @@ st.markdown(f"""
   <!-- Score header -->
   <div class="wr-scores">
     <div class="ws-player">
-      <div class="ws-name ws-name-r">⚡ RANDALL · COROS</div>
+      <div class="ws-name ws-name-r">⚡ RANDALL<span class="ws-name-suffix"> · COROS</span></div>
       <div class="ws-score">{r_total}<span class="ws-unit"> pts</span></div>
       <div class="ws-pct" style="color:#00B4FF">{r_pct}% 本週份額</div>
     </div>
@@ -715,14 +732,14 @@ st.markdown(f"""
       <div class="ws-lead-pts" style="color:{lp_color}">{lp_pts_str}</div>
     </div>
     <div class="ws-player ws-player-z">
-      <div class="ws-name ws-name-z">★ ZOE · 手動輸入</div>
+      <div class="ws-name ws-name-z">★ ZOE<span class="ws-name-suffix"> · 手動輸入</span></div>
       <div class="ws-score">{z_total}<span class="ws-unit"> pts</span></div>
       <div class="ws-pct" style="color:#FF7A00">{z_pct}% 本週份額</div>
     </div>
   </div>
   <!-- Scoring formula -->
   <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:10px 16px;margin-bottom:18px;font-size:11px;font-weight:600;letter-spacing:0.3px;color:rgba(240,240,240,0.38)">
-    📐 積分公式：跑步 TL × 1.5 ＋ 肌力 TL × 1.2
+    積分公式：跑步 TL × 1.5 ＋ 肌力 TL × 1.2
   </div>
   <!-- Tug-of-war battle bar -->
   <div class="bb-wrap">
@@ -745,7 +762,7 @@ st.markdown(f"""
       <div class="pv-track">
         <div class="pv-fill" style="width:{r_bar}%;background:#00B4FF"></div>
       </div>
-      <div class="pv-val" style="color:#00B4FF">{r_pace}</div>
+      <div class="pv-val" style="color:#00B4FF">{r_pace if r_has_pace else "—"}</div>
       <span class="dl {r_pace_dl}">{r_pace_tag}</span>
     </div>
     <div class="pv-row">
@@ -753,7 +770,7 @@ st.markdown(f"""
       <div class="pv-track">
         <div class="pv-fill" style="width:{z_bar}%;background:#FF7A00"></div>
       </div>
-      <div class="pv-val" style="color:#FF7A00">{z_pace}</div>
+      <div class="pv-val" style="color:#FF7A00">{z_pace if z_has_pace else "—"}</div>
       <span class="dl {z_pace_dl}">{z_pace_tag}</span>
     </div>
   </div>
@@ -886,7 +903,7 @@ with eq1:
     st.markdown("""
     <div class="eq">
       <div class="eq-row">
-        <div class="eq-ico" style="background:rgba(227,179,65,0.12)">🏋️</div>
+        <div class="eq-ico" style="background:rgba(227,179,65,0.12)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="4" height="4" rx="1"/><rect x="18" y="10" width="4" height="4" rx="1"/><rect x="6" y="8" width="2" height="8" rx="1"/><rect x="16" y="8" width="2" height="8" rx="1"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
         <div>
           <div class="eq-lbl">Sled Push</div>
           <div class="eq-val">102 kg</div>
@@ -920,7 +937,7 @@ with eq2:
     st.markdown(f"""
     <div class="eq">
       <div class="eq-row">
-        <div class="eq-ico" style="background:rgba(248,81,73,0.12)">🎯</div>
+        <div class="eq-ico" style="background:rgba(248,81,73,0.12)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
         <div>
           <div class="eq-lbl">Wall Balls · 4 kg</div>
           <div class="eq-val">{wb_cur} <span style="font-size:16px;color:#8B949E">/ {wb_tgt}</span></div>
