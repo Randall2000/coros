@@ -1,9 +1,7 @@
 name: Sync intervals.icu (Zoe)
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'   # 每 6 小時自動執行
-  workflow_dispatch:          # 手動觸發
+  workflow_dispatch:          # 手動觸發（已停用自動排程）
 
 jobs:
   fetch:
