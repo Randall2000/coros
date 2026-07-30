@@ -3,6 +3,9 @@ name: Sync Strava (Zoe)
 on:
   workflow_dispatch:          # 手動觸發（已停用自動排程）
 
+permissions:
+  contents: write
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
