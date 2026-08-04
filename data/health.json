@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-08-03T04:23:49.568Z",
+  "updatedAt": "2026-08-04T03:58:05.654Z",
   "recovery": "Recovery Status\n========================\n\nRecovery: 100%\nLevel: Heavy training allowed\nEstimated Full Recovery: 0h",
-  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-08-03\nNaps Total: 0 min",
-  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-08-03: No data\n2026-08-02: 50 bpm\n2026-08-01: 58 bpm",
-  "stress": "Stress Level — Last 1 days\n========================\n\n2026-08-03:\nAverage Stress: 35 (Low)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
+  "sleep": "No sleep data found. A night's sleep appears under its wake-up date and only after the watch syncs; the record for today (2026-08-04) may not be uploaded yet.",
+  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-08-03: 52 bpm\n2026-08-02: 50 bpm",
+  "stress": "No data found in the last 1 days."
 }
