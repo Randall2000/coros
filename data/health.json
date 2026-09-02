@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-01T07:01:47.916Z",
+  "updatedAt": "2026-09-02T05:15:20.716Z",
   "recovery": "Recovery Status\n========================\n\nRecovery: 100%\nLevel: Heavy training allowed\nEstimated Full Recovery: 0h",
-  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-09-01\nSleep Score: 92\nMain Sleep: 7h 58min\nDeep Sleep Ratio: 16%\nLight Sleep Ratio: 50%\nREM Ratio: 33%\nAwake Ratio: 1%\nAwake Time: 6 min\nAwake Count (>5 min): 0\nMain Sleep Window: 2026-09-01 00:12 - 2026-09-01 08:16\nNaps Total: 0 min",
-  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-09-01: 51 bpm\n2026-08-31: 50 bpm\n2026-08-30: 51 bpm",
-  "stress": "Stress Level — Last 1 days\n========================\n\n2026-09-01:\nAverage Stress: 24 (Relaxed)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
+  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-09-02\nSleep Score: 94\nMain Sleep: 7h 56min\nDeep Sleep Ratio: 16%\nLight Sleep Ratio: 58%\nREM Ratio: 24%\nAwake Ratio: 2%\nAwake Time: 10 min\nAwake Count (>5 min): 0\nMain Sleep Window: 2026-09-02 00:13 - 2026-09-02 08:19\nNaps Total: 0 min",
+  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-09-02: 50 bpm\n2026-09-01: 51 bpm\n2026-08-31: 50 bpm",
+  "stress": "Stress Level — Last 1 days\n========================\n\n2026-09-02:\nAverage Stress: 14 (Relaxed)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
 }
