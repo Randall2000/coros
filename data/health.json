@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-02T05:15:20.716Z",
-  "recovery": "Recovery Status\n========================\n\nRecovery: 100%\nLevel: Heavy training allowed\nEstimated Full Recovery: 0h",
-  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-09-02\nSleep Score: 94\nMain Sleep: 7h 56min\nDeep Sleep Ratio: 16%\nLight Sleep Ratio: 58%\nREM Ratio: 24%\nAwake Ratio: 2%\nAwake Time: 10 min\nAwake Count (>5 min): 0\nMain Sleep Window: 2026-09-02 00:13 - 2026-09-02 08:19\nNaps Total: 0 min",
-  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-09-02: 50 bpm\n2026-09-01: 51 bpm\n2026-08-31: 50 bpm",
-  "stress": "Stress Level — Last 1 days\n========================\n\n2026-09-02:\nAverage Stress: 14 (Relaxed)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
+  "updatedAt": "2026-09-03T05:21:11.112Z",
+  "recovery": "Recovery Status\n========================\n\nRecovery: 89%\nLevel: Moderate training recommended\nEstimated Full Recovery: 22h",
+  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-09-03\nSleep Score: 64\nMain Sleep: 7h 7min\nDeep Sleep Ratio: 9%\nLight Sleep Ratio: 64%\nREM Ratio: 22%\nAwake Ratio: 5%\nAwake Time: 21 min\nAwake Count (>5 min): 0\nMain Sleep Window: 2026-09-03 01:03 - 2026-09-03 08:31\nNaps Total: 0 min",
+  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-09-03: 56 bpm\n2026-09-02: 50 bpm\n2026-09-01: 51 bpm",
+  "stress": "Stress Level — Last 1 days\n========================\n\n2026-09-03:\nAverage Stress: 25 (Relaxed)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
 }
