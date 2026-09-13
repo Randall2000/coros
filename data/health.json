@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-09-12T05:15:48.318Z",
+  "updatedAt": "2026-09-13T05:30:06.005Z",
   "recovery": "Recovery Status\n========================\n\nRecovery: 100%\nLevel: Heavy training allowed\nEstimated Full Recovery: 0h",
-  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-09-12\nNaps Total: 0 min",
-  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-09-12: No data\n2026-09-11: 55 bpm\n2026-09-10: 50 bpm",
-  "stress": "Stress Level — Last 1 days\n========================\n\n2026-09-12:\nAverage Stress: 18 (Relaxed)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
+  "sleep": "Sleep Data\n========================\nNote: each record below is dated by its wake-up day.\n\n2026-09-13\nNaps Total: 0 min",
+  "hr": "Resting Heart Rate — Last 3 days\n========================\n\n2026-09-13: No data\n2026-09-12: 49 bpm\n2026-09-11: 55 bpm",
+  "stress": "Stress Level — Last 1 days\n========================\n\n2026-09-13:\nAverage Stress: 17 (Relaxed)\nRelaxed: No data\nLow: No data\nMedium: No data\nHigh: No data"
 }
